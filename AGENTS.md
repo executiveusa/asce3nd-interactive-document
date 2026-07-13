@@ -70,33 +70,42 @@ to every screen, every component, every breakpoint.
 ## 2. The asc3nd Brand System
 
 Source: `asc3nd-frontend-website` → `apps/site/app/globals.css` (Design System v2).
-**Flyer-accurate: Black · Gold #F5A617 · White.**
+**Monochrome workbook. Black · White · Gold (restrained accent).**
+
+### 2.0 The Aesthetic Law (Apple-level, monochrome)
+- **Pure white dominates.** `#ffffff` is the default surface everywhere.
+- **Near-black ink** (`#0a0a0a`) for all text and primary actions.
+- **Gold `#F5A617` is a flourish, not a palette.** Used at most **once per screen**
+  as the single accent — e.g. one CTA button, one price, one progress bar, one
+  active drawer eyebrow. Never as a background tint, never on body text.
+- **No warm tones, no off-whites, no clashing tints.** If a color isn't in
+  §2.1, it doesn't exist in this workbook.
+- **Contrast is sacred.** Body text is `#0a0a0a` on `#ffffff` (≈ 20:1). Anything
+  below WCAG AA fails the Krug Accessibility Law.
 
 ### 2.1 Color tokens
 
-| Token        | Hex       | Role                                            |
-|--------------|-----------|-------------------------------------------------|
-| `--white`    | `#ffffff` | Primary surface. Dominant.                      |
-| `--off`      | `#f9f5f0` | Warm off-white background (Apple-paper feel).   |
-| `--black`    | `#000000` | True ink, used sparingly.                       |
-| `--ink`      | `#15110b` | Primary text. Warm near-black.                  |
-| `--ink2`     | `#3e382f` | Secondary text.                                 |
-| `--muted`    | `#6d665b` | Tertiary text, captions, metadata.              |
-| `--gold`     | `#F5A617` | **The single accent.** CTAs, active states, eyebrows. |
-| `--gold-lt`  | `#FFB733` | Gold highlights, gradients.                     |
-| `--gray`     | `#777777` | Neutral details.                                |
-| `--gray2`    | `#444444` | Neutral text.                                   |
+| Token             | Hex       | Role                                            |
+|-------------------|-----------|-------------------------------------------------|
+| `--bg` / `--card` | `#ffffff` | Primary surface. Dominant everywhere.           |
+| `--card2`         | `#f7f7f8` | Neutral section/card fill (cool, not warm).     |
+| `--card3`         | `#efefef` | Subtle fill (progress tracks, dividers).        |
+| `--ink`           | `#0a0a0a` | Primary text. All headings, body, primary CTA.  |
+| `--ink2`          | `#1d1d1f` | Secondary text.                                 |
+| `--muted`         | `#6e6e73` | Captions, metadata, placeholder.                |
+| `--gold`          | `#F5A617` | **The single accent.** One flourish per screen. |
+| `--border`        | `rgba(0,0,0,.10)` | Hairline borders.                        |
 
 ### 2.2 Color rules
 
-- **White dominates.** Backgrounds are `--white` or `--off`. ≥ 70% of every screen.
-- **Gold is the only accent.** Never introduce a second brand color.
-  - ❌ No green. ❌ No blue. ❌ No purple. ❌ No red (except true error states).
-- **Gold is detail, not filler.** Use it for eyebrows, active states, the CTA,
-  progress fill, and small accents — never for large background areas.
-- **Dark surfaces are rare and intentional.** Reserved for the cover, the
-  Welcome hero, and chapter dividers only. Even there, prefer deep warm ink
-  (`#15110b`) over pure black, and keep text light on a confident gold accent.
+- **White is the design.** ≥ 80% of every content screen is white.
+- **Gold is rationed.** Count gold uses on a screen. More than one prominent
+  use = redesign. Allowed: one CTA, one price, one progress fill, one active
+  eyebrow. That's it.
+- **No green. No blue. No purple. No red** (except a true, semantic error state).
+- **Dark surfaces are true black `#0a0a0a`** — never warm-tinted (`#1a140d`,
+  `#241a0e`, `#f9f5f0` are all banned). Reserved for cover, welcome, chapter
+  dividers, and phase cards only.
 
 ### 2.3 Type system
 
@@ -124,21 +133,26 @@ Source: `asc3nd-frontend-website` → `apps/site/app/globals.css` (Design System
 
 | Component       | Rule                                                                              |
 |-----------------|-----------------------------------------------------------------------------------|
-| CTA button      | Gold gradient (`#F5A617 → #FFB733`), dark ink text, pill, 44px min height.       |
-| Ghost button    | White/transparent, ink text, 1px border. Secondary actions only.                  |
-| Cards           | White surface, 1px hairline border, soft shadow, 14–20px radius.                  |
-| Eyebrow label   | 11px, uppercase, gold, letter-spacing .14em. Marks every section.                 |
-| Active state    | Gold-tinted background `rgba(245,166,23,.14)`, gold border, ink text.            |
-| Tabs            | Pill chips. Active = ink background, white text. Inactive = white, ink text.      |
-| Checklist       | Native checkbox, gold `accent-color`, progress bar = gold gradient fill.          |
-| Drawer item     | Full-width, 44px min height, active = gold fill, white text.                      |
+| Primary button  | **Solid ink** `#0a0a0a`, white text, pill, 44px min height. The default CTA.     |
+| Gold CTA        | Gold `#F5A617` with ink text. **One per screen max.** Reserved for the hero CTA.  |
+| Ghost button    | Transparent, ink text, .5px border. Secondary actions only.                       |
+| Cards           | White surface, .5px hairline border, soft shadow on hover, 14px radius.           |
+| Eyebrow label   | 11px, uppercase, muted gray, .2em letter-spacing. Marks every section.            |
+| Active state    | Ink background, white text (tabs, chips, drawer items). Never gold as a fill.    |
+| Tabs            | Pill chips. Active = ink fill + white text. Inactive = white + ink2 text.        |
+| Checklist       | Native checkbox, ink `accent-color`, ink progress bar fill.                       |
+| Drawer item     | Full-width, 44px min height, active = ink fill, white text, gold eyebrow chip.   |
+| Inputs          | White, .5px border, ink focus ring (3px soft shadow). 44px min height.           |
 
 ---
 
-## 4. Motion
+## 4. Motion (Apple-level polish)
 
-- Subtle, fast, purposeful. Page-turn = `.38s` cubic-bezier flip-in.
-- Respect `prefers-reduced-motion`: animations off when set.
+- **Subtle, fast, purposeful.** Default transition `.18s` ease-out.
+- Page entry: `.4s` fade + 6px rise (`.page-body` animation).
+- Hover lift: `translateY(-1px)`. Active press: `scale(.98)`.
+- Focus: 2px gold outline with 2px offset — the one place gold appears on interaction.
+- `prefers-reduced-motion`: all animations/transitions drop to `.01ms`.
 - No parallax, no autoplay video, no decorative motion that competes with content.
 
 ---
