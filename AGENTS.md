@@ -127,6 +127,24 @@ Source: `asc3nd-frontend-website` → `apps/site/app/globals.css` (Design System
 - Radii: small `8px`, medium `14px`, large `20–24px`. Pills = `999px`.
 - Soft shadows only: `0 2px 16px rgba(0,0,0,.06)`. Never hard, never heavy.
 
+### 2.6 Icons — Lucide is the default (all projects)
+
+- **Lucide** (https://lucide.dev · MIT) is the default icon set for **every**
+  Macs Digital Media deliverable, including this workbook and the asc3nd brand kit.
+- **No emojis. Ever.** Emojis render inconsistently across OS/browser, clash with
+  the monochrome system, and break at small sizes. They are banned.
+- **No mixed icon families.** Do not combine Lucide with Heroicons, Material,
+  Font Awesome, or emoji. One set, always Lucide.
+- **Usage rules:**
+  - Inline the raw SVG directly from lucide.dev/icons (copy → paste). No npm
+    dependency, no icon-font, no network call for the workbook.
+  - Set `stroke="currentColor"` so icons inherit the surrounding text color
+    (`--ink` by default; `#ffffff` on dark surfaces).
+  - Default size: `24×24` viewBox, rendered at `18–20px`. Stroke-width: `1.5–2`.
+  - Never recolor an icon with a fill outside the brand palette (§2.1).
+- **Why Lucide:** 1,500+ icons, uniform 24×24 grid, single stroke weight,
+  rounded corners — matches the Apple-level, monochrome aesthetic exactly.
+
 ---
 
 ## 3. Component Rules
@@ -143,6 +161,7 @@ Source: `asc3nd-frontend-website` → `apps/site/app/globals.css` (Design System
 | Checklist       | Native checkbox, ink `accent-color`, ink progress bar fill.                       |
 | Drawer item     | Full-width, 44px min height, active = ink fill, white text, gold eyebrow chip.   |
 | Inputs          | White, .5px border, ink focus ring (3px soft shadow). 44px min height.           |
+| Icons           | **Lucide only.** Inline SVG, `currentColor`, 18–20px, stroke-width 1.5–2. No emojis. |
 
 ---
 
@@ -176,6 +195,7 @@ Source: `asc3nd-frontend-website` → `apps/site/app/globals.css` (Design System
 - ❌ Invent interaction patterns. Use conventions.
 - ❌ Ship anything that fails on a 375px phone.
 - ❌ Use color alone to convey meaning.
+- ❌ Use emojis or non-Lucide icon families.
 - ❌ Make the reader think.
 
 ---
