@@ -6,12 +6,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify-production:
+    if: ${{ !contains(github.event.head_commit.message, '[skip verify]') }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Wait for Vercel production deployment
         run: sleep 45
 
@@ -23,6 +26,7 @@ jobs:
             | grep -q "ASC3ND"
 
       - name: Verify Supabase save and load RPCs
+        id: supabase
         run: |
           set -euo pipefail
           RESPONSE=$(curl --fail --silent --show-error --retry 6 --retry-delay 10 \
@@ -31,3 +35,17 @@ jobs:
           echo "$RESPONSE" | grep -q '"ok":true'
           echo "$RESPONSE" | grep -q '"save":"connected"'
           echo "$RESPONSE" | grep -q '"load":"connected"'
+          printf '%s\n' "$RESPONSE" > /tmp/supabase-health.json
+
+      - name: Record verified production state
+        run: |
+          mkdir -p health
+          cp /tmp/supabase-health.json health/production.json
+          git config user.name "asc3nd-production-check"
+          git config user.email "actions@users.noreply.github.com"
+          git add health/production.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: record verified production state [skip verify]"
+          git push
