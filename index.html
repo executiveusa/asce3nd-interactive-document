@@ -686,7 +686,7 @@ function playPageTurn(){
 /* ══ DATA ═══════════════════════════════════════════════════════════════ */
 var VOICE_TRAITS=["Warm","Bold","Hopeful","Professional","Youthful","Faith-centered","Community-rooted","Direct","Educational","Activist","Calm","Premium","Playful","Serious"];
 var PILLAR_OPTIONS=["Mission and belief","Founder story","Community education","Behind the scenes","Program updates","Volunteer recruitment","Donor trust","Impact proof","Partner spotlight","Youth/community voice","Event promotion","Myth vs fact","Local culture and community","Resources and opportunities","Celebration and gratitude","Fundraising transparency","Merch or campaign products","Advocacy and awareness"];
-var PLATFORM_OPTIONS=["Instagram","Facebook","TikTok","LinkedIn","YouTube Shorts","X","Threads","Email newsletter","Website/blog"];
+var PLATFORM_OPTIONS=["Instagram","Facebook","LinkedIn","Email newsletter","Website/blog","Landing Page"];
 var METRIC_GROUPS={"Awareness":["Reach","Views","Profile visits","Follower growth"],"Trust":["Saves","Shares","Comments","DMs","Partner reposts","Consent-approved stories"],"Action":["Volunteer signups","Donor inquiries","Donations","Event RSVPs","Email signups","Sponsor leads","Website clicks"],"Consistency":["Posts published","Videos published","Response time","Content capture sessions"]};
 var ROADMAP=[
   {m:"Month 1 — Foundation & Trust",goal:"Make the organization understandable and credible.",focus:"Profile setup, clear bio, brand consistency, founder intro, first story posts, initial content pillars.",del:"12–16 posts · 4 Reels · 4 carousels · first donor/volunteer CTA"},
@@ -724,8 +724,7 @@ var SECTIONS=[
     {k:"cares",label:"What does each audience care about?",type:"textarea"},
     {k:"objections",label:"What objections or doubts might they have?",type:"textarea"},
     {k:"language",label:"What language do they use to describe the problem?",type:"textarea"},
-    {k:"trustedOrgs",label:"5 local organizations or leaders who already have community trust",type:"textarea"},
-    {k:"neverProp",label:"Who should never be treated like a marketing prop in your content?",type:"textarea"}
+    {k:"trustedOrgs",label:"5 local organizations or leaders who already have community trust",type:"textarea"}
   ]},
   {id:"voice",title:"Brand Voice",note:"A nonprofit should build trust before asking for money — voice is where that trust starts.",fields:[
     {k:"wordsUse",label:"Words your organization should use often",type:"textarea"},
@@ -781,18 +780,27 @@ function icon(name,cls){
   return'<svg class="svg-icon'+(cls?' '+cls:'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+(p[name]||p.info)+'</svg>';
 }
 
-function blank(){return{basics:{orgName:"ASC3ND COLLECTIVE",city:"",orgType:"",registration:"",stage:"",oneLiner:"",feeling:""},mission:{why:"",problem:"",who:"",changeIfSuccess:"",personalStory:"",believe:"",impact90:"",impact12:"",proofHave:"",proofNeed:""},audience:{primary:"",secondary:"",supporters:"",cares:"",objections:"",language:"",trustedOrgs:"",neverProp:""},voice:{traits:[],wordsUse:"",wordsAvoid:"",tone:"",captionSound:"",neverSound:"",bilingual:"",languages:""},story:{origin:"",founder:"",urgentMoment:"",smallWin:"",behindScenes:"",consentStories:"",neverPost:"",visualIdentity:""},pillars:{selected:[],why:""},platforms:{selected:[],which2:"",donorPlatform:"",communityPlatform:"",waitPlatform:""},roadmap:{month1:"",month2:"",month3:""},rhythm:{cadence:"",approver:"",videographer:"",captionWriter:"",poster:"",responder:"",finalSay:""},engagement:{alwaysRespond:"",sensitiveTopics:"",tone:"",dmPolicy:"",responseTime:"",criticismHandler:"",safetyBoundaries:""},measurement:{selected:[],baseline:""},risk:{minorsInvolved:"",vulnerablePeople:"",consentRequired:"",imagesNotPost:"",boardApproval:"",claimsVerify:"",donationDocs:""},lastSaved:null};}
+function blank(){return{basics:{orgName:"ASC3ND COLLECTIVE",city:"",orgType:"",registration:"",stage:"",oneLiner:"",feeling:""},mission:{why:"",problem:"",who:"",changeIfSuccess:"",personalStory:"",believe:"",impact90:"",impact12:"",proofHave:"",proofNeed:""},audience:{primary:"",secondary:"",supporters:"",cares:"",objections:"",language:"",trustedOrgs:""},voice:{traits:[],wordsUse:"",wordsAvoid:"",tone:"",captionSound:"",neverSound:"",bilingual:"",languages:""},story:{origin:"",founder:"",urgentMoment:"",smallWin:"",behindScenes:"",consentStories:"",neverPost:"",visualIdentity:""},pillars:{selected:[],why:""},platforms:{selected:[],which2:"",donorPlatform:"",communityPlatform:"",waitPlatform:""},roadmap:{month1:"",month2:"",month3:""},rhythm:{cadence:"",approver:"",videographer:"",captionWriter:"",poster:"",responder:"",finalSay:""},engagement:{alwaysRespond:"",sensitiveTopics:"",tone:"",dmPolicy:"",responseTime:"",criticismHandler:"",safetyBoundaries:""},measurement:{selected:[],baseline:""},risk:{minorsInvolved:"",vulnerablePeople:"",consentRequired:"",imagesNotPost:"",boardApproval:"",claimsVerify:"",donationDocs:""},lastSaved:null};}
 var state=blank();
 
-/* ══ PERSISTENCE (no database — state lives in localStorage + share URL) ══ */
+/* ══ PERSISTENCE — local-first with Supabase cloud mirror ═════════════ */
+var SUPABASE_RPC='https://api.thepaulieffect.com/supabase/rest/v1/rpc/';
+var SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzcyNzc2NjczLCJleHAiOjE5MzA0NTY2NzN9.rl1mc-GgpG6nQArbEfFAKOcMvzL7rrgzPFT-LlCiCy4';
+var PROJECT_ID='d0000000-0000-0000-0000-000000000001';
+var DEVICE_KEY='asc3nd-device-id-v1';
+var cloudSaving=false;
+function getDeviceId(){var id='';try{id=localStorage.getItem(DEVICE_KEY)||'';}catch(e){}if(!id){id='asc3nd-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12);try{localStorage.setItem(DEVICE_KEY,id);}catch(e){}}return id;}
+function cloudHeaders(){return{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Profile':'work'};}
 function saveLocal(){state.lastSaved=new Date().toISOString();try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}updateSaveMsg();}
 function queueSave(){if(saveTimer)clearTimeout(saveTimer);saveTimer=setTimeout(function(){saveLocal();},900);}
+async function saveToCloud(showToast){if(cloudSaving)return false;cloudSaving=true;saveLocal();var el=document.getElementById('save-msg');if(el)el.textContent='Saving to cloud…';try{var res=await fetch(SUPABASE_RPC+'save_submission',{method:'POST',headers:cloudHeaders(),body:JSON.stringify({p_project_id:PROJECT_ID,p_device_id:getDeviceId(),p_payload:{workbook:state,saved_at:new Date().toISOString()}})});if(!res.ok)throw new Error('Cloud save failed: '+res.status);if(el)el.textContent='Saved to cloud';if(showToast)toast('Submitted and saved to cloud');return true;}catch(err){console.error(err);if(el)el.textContent='Saved locally — cloud unavailable';if(showToast)toast('Saved locally. Cloud save failed.');return false;}finally{cloudSaving=false;}}
+async function loadFromCloud(){try{var res=await fetch(SUPABASE_RPC+'load_submission',{method:'POST',headers:cloudHeaders(),body:JSON.stringify({p_device_id:getDeviceId()})});if(!res.ok)return;var data=await res.json();var row=Array.isArray(data)?data[0]:data;var payload=row&&row.payload;if(payload&&payload.workbook){state=Object.assign(blank(),payload.workbook);saveLocal();if(started)renderStep();}}catch(err){console.warn('Cloud load unavailable',err);}}
 function loadLocal(){
   var hash=window.location.hash;
   if(hash&&hash.startsWith('#state=')){
     try{var d=JSON.parse(decodeURIComponent(atob(hash.slice(7))));state=Object.assign(blank(),d);window.location.hash='';return;}catch(e){}
   }
-  try{var s=localStorage.getItem(STORAGE_KEY);if(s)state=Object.assign(blank(),JSON.parse(s));}catch(e){}
+  try{var saved=localStorage.getItem(STORAGE_KEY);if(saved)state=Object.assign(blank(),JSON.parse(saved));}catch(e){}
 }
 function updateSaveMsg(){var el=document.getElementById('save-msg');if(!el)return;if(!state.lastSaved){el.textContent='Not saved';return;}var d=new Date(state.lastSaved);el.textContent=t('Saved')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
 
@@ -806,7 +814,7 @@ function openShareModal(){
   var bg=document.createElement('div');bg.className='modal-bg';
   bg.addEventListener('click',function(e){if(e.target===bg)closeModal();});
   var mo=document.createElement('div');mo.className='modal';
-  mo.innerHTML='<h3>Share this workbook</h3><p>Anyone with this link can open the workbook in its current state. Data is embedded in the URL — no server storage needed. Recipients can edit, save locally, and share a new link.</p><div class="modal-slug" style="word-break:break-all;font-size:13px;background:var(--card3);">Snapshot encoded</div><p style="font-size:12px;color:var(--muted);word-break:break-all;margin-bottom:12px;">'+url+'</p><div class="modal-actions"><button class="cta-btn" id="mcb">Copy link</button><button class="tbtn" id="mcl">Close</button></div>';
+  mo.innerHTML='<h3>Share this workbook</h3><p>Anyone with this link can open the workbook in its current state. A snapshot is embedded in this URL. The live workbook also saves to the ASC3ND cloud database.</p><div class="modal-slug" style="word-break:break-all;font-size:13px;background:var(--card3);">Snapshot encoded</div><p style="font-size:12px;color:var(--muted);word-break:break-all;margin-bottom:12px;">'+url+'</p><div class="modal-actions"><button class="cta-btn" id="mcb">Copy link</button><button class="tbtn" id="mcl">Close</button></div>';
   bg.appendChild(mo);mw.appendChild(bg);
   setTimeout(function(){
     var cb=document.getElementById('mcb');if(cb)cb.addEventListener('click',function(){copyShareUrl(url);});
@@ -1004,7 +1012,7 @@ function rStrategy(){
   '<h3 class="strat-h1">'+t('A social brand in development')+'</h3>'+
   '<p class="strat-lead">'+t('Asc3nd Collective is a nonprofit organization focused on advancing youth development through education, mentorship, leadership, community, and well-being.')+'</p>'+
   '<div class="strat-card-grid">'+
-    '<div class="strat-card"><div class="strat-icon">01</div><h4>'+t('Build awareness')+'</h4><p>'+t('Introduce who they are, what they do, why they exist, and why their work matters.')+'</p></div>'+
+    '<div class="strat-card"><div class="strat-icon">01</div><h4>'+t('Build awareness')+'</h4><p>'+t('Introduce who you are, what you do, why you exist, and why your work matters.')+'</p></div>'+
     '<div class="strat-card"><div class="strat-icon">02</div><h4>'+t('Build trust')+'</h4><p>'+t('Show a serious, approachable organization that is active in its community.')+'</p></div>'+
     '<div class="strat-card"><div class="strat-icon">03</div><h4>'+t('Attract community')+'</h4><p>'+t('Open doors for youth, families, volunteers, mentors, partners, and potential donors.')+'</p></div>'+
   '</div>'+
@@ -1045,9 +1053,9 @@ function rStrategy(){
   '<div class="strat-eyebrow" style="margin-top:26px;">06 | '+t('Content pillars')+'</div>'+
   '<h3 class="strat-h2">'+t('Six pillars to build brand and community')+'</h3>'+
   '<div class="strat-card-grid two">'+
-    '<div class="strat-card"><h4>'+t('Who we are')+'</h4><p>'+t('Present Asc3nd\u2019s mission, values, story, team, and reason for existing.')+'</p></div>'+
-    '<div class="strat-card"><h4>'+t('Our programs')+'</h4><p>'+t('Explain the areas of education, mentorship, leadership, community, and well-being.')+'</p></div>'+
-    '<div class="strat-card"><h4>'+t('Human stories')+'</h4><p>'+t('Show people, voices, moments, and experiences that reflect the organization\u2019s purpose.')+'</p></div>'+
+    '<div class="strat-card"><h4>'+t('Who you are')+'</h4><p>'+t('Present Asc3nd\u2019s mission, values, story, team, and reason for existing.')+'</p></div>'+
+    '<div class="strat-card"><h4>'+t('Your programs')+'</h4><p>'+t('Explain the areas of education, mentorship, leadership, community, and well-being.')+'</p></div>'+
+    '<div class="strat-card"><h4>'+t('Human stories')+'</h4><p>'+t('Show people, voices, moments, and experiences that reflect your organization\u2019s purpose.')+'</p></div>'+
     '<div class="strat-card"><h4>'+t('Education and resources')+'</h4><p>'+t('Deliver practical value to youth, families, volunteers, and mentors.')+'</p></div>'+
     '<div class="strat-card"><h4>'+t('Community and participation')+'</h4><p>'+t('Invite people to get involved, attend, collaborate, share, and become part of the movement.')+'</p></div>'+
     '<div class="strat-card"><h4>'+t('Impact and transparency')+'</h4><p>'+t('Reinforce trust through progress, learnings, results, and public-facing development.')+'</p></div>'+
@@ -1205,9 +1213,16 @@ function bPillars(c){c.querySelectorAll('[data-pillar]').forEach(function(ch){ch
 function rPlatforms(){
   var sel=state.platforms.selected;
   var chips=PLATFORM_OPTIONS.map(function(p){var on=sel.indexOf(p)>-1;return'<label class="chip'+(on?' on':'')+'" data-plat="'+esc(p)+'"><input type="checkbox" '+(on?'checked':'')+'>'+t(p)+'</label>';}).join('');
-  var roles={"Instagram":"Visual trust, Reels, carousels, Stories, community proof.","TikTok":"Short-form education, behind-the-scenes, youth culture.","Facebook":"Local community, parents, older supporters, events, donation updates.","LinkedIn":"Sponsors, partners, grant readiness, board/advisor trust.","YouTube Shorts":"Evergreen short video library, founder clips, program education.","Email newsletter":"Owned audience, donor updates, volunteer reminders, deeper trust.","Website/blog":"Permanent home for stories, program pages, impact proof, search visibility."};
-  var roleHTML=Object.keys(roles).map(function(k){return'<div><span class="k">'+k+'</span> — '+roles[k]+'</div>';}).join('');
-  return'<h3 class="section-title">Platform Strategy</h3><p class="consultant-note">Do not spread evenly. Focus on the platforms you can consistently manage.</p><div class="chips" style="margin-bottom:14px;">'+chips+'</div><div class="refcard">'+roleHTML+'</div><div class="field"><label>Which 2 platforms can you consistently manage for the next 90 days?</label><input type="text" data-sec="platforms" data-k="which2" value="'+esc(state.platforms.which2)+'"></div><div class="field"><label>Which platform matters most for donors or partners?</label><input type="text" data-sec="platforms" data-k="donorPlatform" value="'+esc(state.platforms.donorPlatform)+'"></div><div class="field"><label>Which platform matters most for the community you serve?</label><input type="text" data-sec="platforms" data-k="communityPlatform" value="'+esc(state.platforms.communityPlatform)+'"></div><div class="field"><label>Which platform should wait until later?</label><input type="text" data-sec="platforms" data-k="waitPlatform" value="'+esc(state.platforms.waitPlatform)+'"></div>';
+  var roles={
+    "Instagram":"Visual trust, Reels, carousels, Stories, community proof.",
+    "Facebook":"Local community, parents, older supporters, events, donation updates.",
+    "LinkedIn":"Sponsors, partners, grant readiness, board/advisor trust.",
+    "Email newsletter":"Owned audience, donor updates, volunteer reminders, deeper trust. Not the first focus, but always collect emails. It is free to do and helps build a list for the future.",
+    "Website/blog":"Permanent home for stories, program pages, impact proof, and search visibility.",
+    "Landing Page":"Landing page for your first event — already in process as discussed."
+  };
+  var roleHTML=Object.keys(roles).map(function(k){return'<div style="margin-bottom:10px;"><span class="k">'+k+'</span> — '+roles[k]+'</div>';}).join('');
+  return'<h3 class="section-title">Platform Strategy</h3><p class="consultant-note">Focus only on the channels that support trust, community, partnerships, and owned audience growth.</p><div class="chips" style="margin-bottom:14px;">'+chips+'</div><div class="refcard">'+roleHTML+'</div><div class="field"><label>Which 2 platforms can you consistently manage for the next 90 days?</label><input type="text" data-sec="platforms" data-k="which2" value="'+esc(state.platforms.which2)+'"></div><div class="field"><label>Which platform matters most for donors or partners?</label><input type="text" data-sec="platforms" data-k="donorPlatform" value="'+esc(state.platforms.donorPlatform)+'"></div><div class="field"><label>Which platform matters most for the community you serve?</label><input type="text" data-sec="platforms" data-k="communityPlatform" value="'+esc(state.platforms.communityPlatform)+'"></div>';
 }
 function bPlatforms(c){c.querySelectorAll('[data-plat]').forEach(function(ch){ch.addEventListener('click',function(e){e.preventDefault();var p=ch.dataset.plat;var idx=state.platforms.selected.indexOf(p);if(idx>-1)state.platforms.selected.splice(idx,1);else state.platforms.selected.push(p);queueSave();renderStep();});});bindFields(c);}
 
@@ -1217,7 +1232,7 @@ function rRoadmap(){
 }
 function rRhythm(){
   var opts=RHYTHM.map(function(r){var on=state.rhythm.cadence===r.k;return'<label class="chip'+(on?' on':'')+' chip-block" data-cad="'+r.k+'" style="display:block;padding:12px 16px;border-radius:10px;"><input type="radio" '+(on?'checked':'')+'><b>'+t(r.k)+'</b><br><span style="font-size:12.5px;color:'+(on?'#a8d5b0':'var(--muted)')+';">'+r.d+'</span></label>';}).join('');
-  return'<h3 class="section-title">Weekly Rhythm</h3><p class="consultant-note">Pick the cadence your team can actually maintain, not the one that sounds impressive.</p><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;">'+opts+'</div><div class="field"><label>'+t('Who approves content?')+'</label><input type="text" data-sec="rhythm" data-k="approver" value="'+esc(state.rhythm.approver)+'"></div><div class="field"><label>'+t('Who records video?')+'</label><input type="text" data-sec="rhythm" data-k="videographer" value="'+esc(state.rhythm.videographer)+'"></div><div class="field"><label>'+t('Who writes captions?')+'</label><input type="text" data-sec="rhythm" data-k="captionWriter" value="'+esc(state.rhythm.captionWriter)+'"></div><div class="field"><label>'+t('Who posts?')+'</label><input type="text" data-sec="rhythm" data-k="poster" value="'+esc(state.rhythm.poster)+'"></div><div class="field"><label>'+t('Who responds to comments?')+'</label><input type="text" data-sec="rhythm" data-k="responder" value="'+esc(state.rhythm.responder)+'"></div><div class="field"><label>'+t('Who has final say on sensitive content?')+'</label><input type="text" data-sec="rhythm" data-k="finalSay" value="'+esc(state.rhythm.finalSay)+'"></div>';
+  return'<h3 class="section-title">Weekly Rhythm</h3><p class="consultant-note">We start small with the light option until we gain traction. This takes time. Focus on organic followers and the people you already know. Do not worry so much about paid ads, going viral, or different algorithms. Real stories, real people, real impact.</p><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;">'+opts+'</div><div class="field"><label>'+t('Who approves content?')+'</label><input type="text" data-sec="rhythm" data-k="approver" value="'+esc(state.rhythm.approver)+'"></div><div class="field"><label>'+t('Who records video?')+'</label><input type="text" data-sec="rhythm" data-k="videographer" value="'+esc(state.rhythm.videographer)+'"></div><div class="field"><label>'+t('Who writes captions?')+'</label><input type="text" data-sec="rhythm" data-k="captionWriter" value="'+esc(state.rhythm.captionWriter)+'"></div><div class="field"><label>'+t('Who posts?')+'</label><input type="text" data-sec="rhythm" data-k="poster" value="'+esc(state.rhythm.poster)+'"></div><div class="field"><label>'+t('Who responds to comments?')+'</label><input type="text" data-sec="rhythm" data-k="responder" value="'+esc(state.rhythm.responder)+'"></div><div class="field"><label>'+t('Who has final say on sensitive content?')+'</label><input type="text" data-sec="rhythm" data-k="finalSay" value="'+esc(state.rhythm.finalSay)+'"></div>';
 }
 function bRhythm(c){c.querySelectorAll('[data-cad]').forEach(function(ch){ch.addEventListener('click',function(e){e.preventDefault();state.rhythm.cadence=ch.dataset.cad;queueSave();renderStep();});});bindFields(c);}
 
@@ -1274,13 +1289,15 @@ function rSummary(){
       '<button class="ebtn p" id="s-copy">'+t('Copy strategy brief')+'</button>'+
       '<button class="ebtn" id="s-print">'+t('Print / PDF')+'</button>'+
       '<button class="ebtn" onclick="openShareModal()">Share workbook <svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></button>'+
+      '<button class="ebtn p" id="s-submit">Submit</button>'+
     '</div>'+
     '<textarea class="copy-area" id="s-area" style="display:none;" readonly></textarea>';
 }
 function bSummary(){setTimeout(function(){
-  var cp=document.getElementById('s-copy');var pr=document.getElementById('s-print');var ar=document.getElementById('s-area');
+  var cp=document.getElementById('s-copy');var pr=document.getElementById('s-print');var sub=document.getElementById('s-submit');var ar=document.getElementById('s-area');
   if(cp)cp.addEventListener('click',function(){var txt=buildBrief();try{navigator.clipboard.writeText(txt).then(function(){toast('Copied!');}).catch(function(){ar.style.display='block';ar.value=txt;ar.focus();ar.select();});}catch(e){ar.style.display='block';ar.value=txt;ar.focus();ar.select();}});
   if(pr)pr.addEventListener('click',function(){window.print();});
+  if(sub)sub.addEventListener('click',function(){saveToCloud(true);});
 },0);}
 
 /* ══ NAVIGATION ══════════════════════════════════════════════════════ */
@@ -1333,11 +1350,11 @@ function renderProgress(){
 
 function renderNav(){
   var w=document.getElementById('nav-row');var isLast=stepIndex===STEPS.length-1;
-  w.innerHTML='<button class="nav-btn" id="n-back" '+(stepIndex===0?'disabled':'')+'>'+t('Back')+'</button><span class="page-num">'+(stepIndex+1)+' / '+STEPS.length+'</span><button class="nav-btn primary" id="n-next">'+(isLast?t('View final plan'):t('Next'))+'</button>';
+  w.innerHTML='<button class="nav-btn" id="n-back" '+(stepIndex===0?'disabled':'')+'>'+t('Back')+'</button><span class="page-num">'+(stepIndex+1)+' / '+STEPS.length+'</span><button class="nav-btn primary" id="n-next">'+(isLast?t('Submit'):t('Next'))+'</button>';
   setTimeout(function(){
     var bb=document.getElementById('n-back');var nb=document.getElementById('n-next');
     if(bb)bb.addEventListener('click',function(){if(stepIndex>0){playPageTurn();stepIndex--;renderStep();}});
-    if(nb)nb.addEventListener('click',function(){if(stepIndex<STEPS.length-1){playPageTurn();stepIndex++;renderStep();}else renderStep();});
+    if(nb)nb.addEventListener('click',function(){if(stepIndex<STEPS.length-1){playPageTurn();stepIndex++;renderStep();}else saveToCloud(true);});
   },0);
 }
 
@@ -1345,116 +1362,11 @@ function renderNav(){
 loadLocal();
 initMenu();
 renderCover();
+loadFromCloud();
+setInterval(function(){saveToCloud(false);},10000);
 
 })();
 </script>
-
-<!-- ── OFFER DIVIDER ── -->
-<div class="off-hero">
-  <div class="off-stairs">
-    <div style="height:14px"></div><div style="height:22px"></div>
-    <div style="height:30px"></div><div style="height:38px"></div>
-    <div style="height:48px"></div><div style="height:58px"></div>
-  </div>
-  <div class="off-eyebrow">Ready to go further?</div>
-  <h2>Turn this strategy into<br>a working content system.</h2>
-  <p>The strategy you built above belongs to ASC3ND COLLECTIVE. Every answer, every section, every export — it's yours. Here's what we can build together next.</p>
-</div>
-
-<!-- WHAT YOU GET -->
-<div class="off-section">
-  <div class="off-eyebrow-g">What's included</div>
-  <h3>Everything you need for your first 90 days.</h3>
-  <div class="off-gets">
-    <div class="off-get"><div class="off-get-icon"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div><div><div class="off-get-title">Interactive Strategy Workbook</div><div class="off-get-desc">The workbook above — hosted on your own URL, bilingual EN/ES, shared with your whole team, auto-saved to the cloud.</div></div></div>
-    <div class="off-get"><div class="off-get-icon"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div><div class="off-get-title">4 Guided Strategy Sessions</div><div class="off-get-desc">We fill it out together — live, on a shared screen. Every answer becomes part of your permanent strategy document.</div></div></div>
-    <div class="off-get"><div class="off-get-icon"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="off-get-title">90-Day Content Calendar</div><div class="off-get-desc">12 weeks of themes, post ideas, short video concepts, and engagement actions — built from your actual strategy.</div></div></div>
-    <div class="off-get"><div class="off-get-icon"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div><div class="off-get-title">30-Post Caption Bank</div><div class="off-get-desc">Captions written in your voice, for your audience, across your selected content pillars. Ready to post or adapt.</div></div></div>
-    <div class="off-get"><div class="off-get-icon"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><div><div class="off-get-title">Shot List & Visual Direction</div><div class="off-get-desc">Exactly what to photograph and film in Month 1 — spaces, faces, moments, and behind-the-scenes content that builds trust.</div></div></div>
-    <div class="off-get"><div class="off-get-icon"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div><div class="off-get-title">Platform Bio Updates</div><div class="off-get-desc">Updated bios for up to 3 platforms — clear, consistent, and aligned with your new voice and mission statement.</div></div></div>
-  </div>
-</div>
-
-<div class="off-divider"></div>
-
-<!-- VALUE STACK -->
-<div class="off-section">
-  <div class="off-stack">
-    <div class="off-eyebrow">Your investment</div>
-    <h3>What everything is worth — and what you pay.</h3>
-    <p class="off-stack-sub">We usually charge $4,995 for this engagement. ASC3ND COLLECTIVE gets a community partner rate.</p>
-    <div class="off-stack-row"><span class="off-stack-item">Interactive strategy workbook (your own URL)</span><span class="off-stack-val">$400</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-stack-row"><span class="off-stack-item">4 guided sessions (60–90 min each)</span><span class="off-stack-val">$800</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-stack-row"><span class="off-stack-item">EN/ES bilingual support throughout</span><span class="off-stack-val">$200</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-stack-row"><span class="off-stack-item">90-day content calendar</span><span class="off-stack-val">$600</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-stack-row"><span class="off-stack-item">30-post caption bank</span><span class="off-stack-val">$450</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-stack-row"><span class="off-stack-item">Shot list + visual direction guide</span><span class="off-stack-val">$200</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-stack-row"><span class="off-stack-item">Platform bio updates (3 platforms)</span><span class="off-stack-val">$150</span><span class="off-stack-inc">Included</span></div>
-    <div class="off-price-block">
-      <div class="off-was-row">
-        <span class="off-was-label">Standard rate</span>
-        <span class="off-was-val">$4,995</span>
-      </div>
-      <div class="off-price-row">
-        <span class="off-price-label">Your investment</span>
-        <span class="off-price-val">$2,450</span>
-      </div>
-      <div class="off-savings">You save $2,545 — community partner rate</div>
-      <div class="off-price-note">No subscription. No lock-in. You own everything we build.</div>
-    </div>
-  </div>
-</div>
-
-<!-- PAYMENT SCHEDULE -->
-<div class="off-section" style="padding-top:0;">
-  <div class="off-eyebrow-g">How payments work</div>
-  <h3>You pay as we deliver.</h3>
-  <p>We don't ask for everything upfront because the work happens in stages. You should see what you're getting before you pay for the next part.</p>
-  <div class="off-payments">
-    <div class="off-payment"><div class="off-pay-day">Day 1</div><div class="off-pay-amt">$995</div><div class="off-pay-desc">Agreement signed. Work begins. Session 1 scheduled within 48 hours.</div></div>
-    <div class="off-payment"><div class="off-pay-day">Day 30</div><div class="off-pay-amt">$485</div><div class="off-pay-desc">Sessions 1–2 complete. Workbook 50% filled. First content pillars approved.</div></div>
-    <div class="off-payment"><div class="off-pay-day">Day 60</div><div class="off-pay-amt">$485</div><div class="off-pay-desc">Sessions 3–4 complete. Workbook 100% filled. Strategy brief ready.</div></div>
-    <div class="off-payment"><div class="off-pay-day">Completion</div><div class="off-pay-amt">$485</div><div class="off-pay-desc">Calendar, caption bank, shot list, and platform bios delivered.</div></div>
-  </div>
-</div>
-
-<div class="off-divider"></div>
-
-<!-- PROMISE -->
-<div class="off-section">
-  <div class="off-eyebrow-g">Our commitment</div>
-  <h3>What we promise — and what we won't pretend to.</h3>
-  <div class="off-promises">
-    <div class="off-promise"><span class="off-check"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>A clear, documented strategy your whole team can use</span></div>
-    <div class="off-promise"><span class="off-check"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>A system you can run without us after Day 60</span></div>
-    <div class="off-promise"><span class="off-check"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>Content built around your real capacity — not what sounds impressive</span></div>
-    <div class="off-promise"><span class="off-check"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>Bilingual support from the first session</span></div>
-    <div class="off-promise"><span class="off-check"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>You own everything — if we stop working together, nothing disappears</span></div>
-    <div class="off-promise"><span class="off-check"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>Macs Digital Media will not disappear after the first payment</span></div>
-  </div>
-  <div style="margin-top:20px;">
-    <div class="off-eyebrow-g" style="color:var(--muted);">What we will not promise</div>
-    <div class="off-wonts">
-      <div class="off-wont"><span class="off-x"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span>Specific follower counts or growth rates</span></div>
-      <div class="off-wont"><span class="off-x"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span>Viral posts or guaranteed engagement numbers</span></div>
-      <div class="off-wont"><span class="off-x"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span>Donor amounts or fundraising results</span></div>
-      <div class="off-wont"><span class="off-x"><svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span>Content that uses your community's pain as a marketing tool</span></div>
-    </div>
-  </div>
-</div>
-
-<div class="off-divider"></div>
-
-<!-- CTA -->
-<div class="off-section">
-  <div class="off-cta">
-    <div class="off-eyebrow" style="color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;margin-bottom:12px;">Next step</div>
-    <h3>30 minutes with Stacy.<br>Your strategy starts today.</h3>
-    <p>The next step is a 30-minute call with Stacy to secure your offer. You'll leave with your first content pillars approved, our team gets to work within 24 hrs and within 7 business days you have your content strategy and a clear picture of what Month 1 looks like.</p>
-    <a href="https://share.google/rQnC8v9Mg1G88rVlt" class="off-cta-btn">Schedule your call with Stacy <svg class="svg-icon sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" style="margin-left:4px;"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
-    <p class="off-cta-fine">No obligation. No pressure. If it's not the right fit, we'll tell you honestly.</p>
-  </div>
-</div>
 
 <!-- FOOTER -->
 <div class="off-footer">
