@@ -1,0 +1,33 @@
+name: Verify production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Vercel production deployment
+        run: sleep 45
+
+      - name: Verify live document
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 6 --retry-delay 10 \
+            https://asc3nd-interactive-document.vercel.app/ \
+            | grep -q "ASC3ND"
+
+      - name: Verify Supabase save and load RPCs
+        run: |
+          set -euo pipefail
+          RESPONSE=$(curl --fail --silent --show-error --retry 6 --retry-delay 10 \
+            https://asc3nd-interactive-document.vercel.app/api/health-supabase)
+          echo "$RESPONSE"
+          echo "$RESPONSE" | grep -q '"ok":true'
+          echo "$RESPONSE" | grep -q '"save":"connected"'
+          echo "$RESPONSE" | grep -q '"load":"connected"'
