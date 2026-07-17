@@ -794,7 +794,27 @@ function cloudHeaders(){return{'Content-Type':'application/json','apikey':SUPABA
 function saveLocal(){state.lastSaved=new Date().toISOString();try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}updateSaveMsg();}
 function queueSave(){if(saveTimer)clearTimeout(saveTimer);saveTimer=setTimeout(function(){saveLocal();},900);}
 async function saveToCloud(showToast){if(cloudSaving)return false;cloudSaving=true;saveLocal();var el=document.getElementById('save-msg');if(el)el.textContent='Saving to cloud…';try{var res=await fetch(SUPABASE_RPC+'save_submission',{method:'POST',headers:cloudHeaders(),body:JSON.stringify({p_project_id:PROJECT_ID,p_device_id:getDeviceId(),p_payload:{workbook:state,saved_at:new Date().toISOString()}})});if(!res.ok)throw new Error('Cloud save failed: '+res.status);if(el)el.textContent='Saved to cloud';if(showToast)toast('Submitted and saved to cloud');return true;}catch(err){console.error(err);if(el)el.textContent='Saved locally — cloud unavailable';if(showToast)toast('Saved locally. Cloud save failed.');return false;}finally{cloudSaving=false;}}
-async function loadFromCloud(){try{var res=await fetch(SUPABASE_RPC+'load_submission',{method:'POST',headers:cloudHeaders(),body:JSON.stringify({p_device_id:getDeviceId()})});if(!res.ok)return;var data=await res.json();var row=Array.isArray(data)?data[0]:data;var payload=row&&row.payload;if(payload&&payload.workbook){state=Object.assign(blank(),payload.workbook);saveLocal();if(started)renderStep();}}catch(err){console.warn('Cloud load unavailable',err);}}
+async function loadFromCloud(){try{
+/* Cross-device sync: load the LATEST submission with real data across ALL devices.
+   This fixes the bug where opening the document on a new device showed a blank form
+   even though the client had already filled it out elsewhere. */
+var res=await fetch(SUPABASE_RPC+'load_latest_submission',{method:'POST',headers:cloudHeaders(),body:JSON.stringify({})});
+if(!res.ok)return;
+var row=await res.json();
+var payload=row&&row.payload;
+if(payload&&payload.workbook){
+var cloudWb=payload.workbook;
+/* Count how many fields have real data in cloud vs local */
+function countFilled(obj){if(!obj||typeof obj!=='object')return 0;var n=0;for(var k in obj){var v=obj[k];if(typeof v==='string'&&v.trim())n++;else if(Array.isArray(v)&&v.length)n++;else if(typeof v==='object'&&v)n+=countFilled(v);}return n;}
+var cloudCount=countFilled(cloudWb);
+var localCount=countFilled(state);
+if(cloudCount>localCount){
+state=Object.assign(blank(),cloudWb);
+saveLocal();
+if(started)renderStep();
+}
+}
+}catch(err){console.warn('Cloud load unavailable',err);}}
 function loadLocal(){
   var hash=window.location.hash;
   if(hash&&hash.startsWith('#state=')){
