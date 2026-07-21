@@ -1587,51 +1587,53 @@ function openCameraBrief(){
   if(!wrap)return;
   var s=state.chapter2.shotLists||{founders:{},broll:{},eventDay:{}};
   
-  wrap.innerHTML='<div class="modal-bg" onclick="closeModal(event)">'+
-    '<div class="modal brief-modal" style="background:var(--bg);color:var(--ink);">'+
-      '<div class="brief-header" style="display:flex;justify-content:space-between;align-items:center;">'+
+  wrap.innerHTML='<div class="modal-bg" onclick="if(event.target.classList.contains(\'modal-bg\'))document.getElementById(\'modal-wrap\').innerHTML=\'\';">'+
+    '<div class="modal brief-modal" style="background:var(--bg);color:var(--ink);max-height:85vh;display:flex;flex-direction:column;padding:24px;">'+
+      '<div class="brief-header" style="flex-shrink:0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:20px;">'+
         '<div>'+
-          '<h3 style="margin:0;font-family:\'Barlow Condensed\',sans-serif;font-size:22px;">'+t('Camera Operator Production Brief')+'</h3>'+
+          '<h3 style="margin:0;font-family:\'Barlow Condensed\',sans-serif;font-size:22px;color:var(--ink);">'+t('Camera Operator Production Brief')+'</h3>'+
           '<p style="font-size:12px;color:var(--muted);margin:0;">'+t('Founder Interview Story Shoot — July 24, 2026')+'</p>'+
         '</div>'+
-        '<button class="menu-close" onclick="closeModal()">×</button>'+
+        '<button class="menu-close" onclick="document.getElementById(\'modal-wrap\').innerHTML=\'\';" style="border:none;background:none;font-size:24px;cursor:pointer;color:var(--ink);">&times;</button>'+
       '</div>'+
       
-      '<div class="brief-section">'+
-        '<h4>'+t('1. Must-Get Shots')+'</h4>'+
-        '<div style="display:grid;gap:8px;">'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-othasolo" '+(s.founders.othaHorizontal?'checked':'')+'> Otha Solo Interview (Horizontal & Vertical safe)</label>'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-elishasolo" '+(s.founders.elishaHorizontal?'checked':'')+'> Elisha Solo Interview (Horizontal & Vertical safe)</label>'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-both" '+(s.founders.bothHorizontal?'checked':'')+'> Founders Together Interview</label>'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-invite" '+(s.founders.directCameraInvite?'checked':'')+'> Event invitation & volunteer CTA (direct camera)</label>'+
+      '<div class="brief-body" style="flex-grow:1;overflow-y:auto;padding-right:8px;text-align:left;">'+
+        '<div class="brief-section">'+
+          '<h4>'+t('1. Must-Get Shots')+'</h4>'+
+          '<div style="display:grid;gap:8px;">'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-othasolo" '+(s.founders.othaHorizontal?'checked':'')+'> Otha Solo Interview (Horizontal & Vertical safe)</label>'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-elishasolo" '+(s.founders.elishaHorizontal?'checked':'')+'> Elisha Solo Interview (Horizontal & Vertical safe)</label>'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-both" '+(s.founders.bothHorizontal?'checked':'')+'> Founders Together Interview</label>'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-invite" '+(s.founders.directCameraInvite?'checked':'')+'> Event invitation & volunteer CTA (direct camera)</label>'+
+          '</div>'+
         '</div>'+
-      '</div>'+
-      
-      '<div class="brief-section">'+
-        '<h4>'+t('2. B-Roll & Visual Assets')+'</h4>'+
-        '<div style="display:grid;gap:8px;">'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-portraits" '+(s.broll.planningTable?'checked':'')+'> Individual portraits & walking/interaction shots</label>'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-details" '+(s.broll.handsDetails?'checked':'')+'> Close-ups: hands, notebook writing, historical artifacts</label>'+
-          '<label style="display:flex;gap:8px;font-size:13.5px;"><input type="checkbox" id="cb-exterior" '+(s.broll.meaningfulArtifacts?'checked':'')+'> Exterior setting (no private identifying address details)</label>'+
+        
+        '<div class="brief-section" style="margin-top:20px;">'+
+          '<h4>'+t('2. B-Roll & Visual Assets')+'</h4>'+
+          '<div style="display:grid;gap:8px;">'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-portraits" '+(s.broll.planningTable?'checked':'')+'> Individual portraits & walking/interaction shots</label>'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-details" '+(s.broll.handsDetails?'checked':'')+'> Close-ups: hands, notebook writing, historical artifacts</label>'+
+            '<label style="display:flex;gap:8px;font-size:13.5px;color:var(--ink);align-items:center;"><input type="checkbox" id="cb-exterior" '+(s.broll.meaningfulArtifacts?'checked':'')+'> Exterior setting (no private identifying address details)</label>'+
+          '</div>'+
         '</div>'+
-      '</div>'+
-      
-      '<div class="brief-section">'+
-        '<h4>'+t('3. Technical Principles')+'</h4>'+
-        '<div class="brief-grid">'+
-          '<div class="brief-card"><h5>'+t('Dialogue First')+'</h5><p>'+t('Ensure crisp, clean dialogue audio. Control background noise.')+'</p></div>'+
-          '<div class="brief-card"><h5>'+t('9:16 Safe')+'</h5><p>'+t('Frame shots with 16:9 widescreen context but keep subjects safe for 9:16 vertical crop.')+'</p></div>'+
+        
+        '<div class="brief-section" style="margin-top:20px;">'+
+          '<h4>'+t('3. Technical Principles')+'</h4>'+
+          '<div class="brief-grid">'+
+            '<div class="brief-card" style="margin-bottom:8px;"><h5>'+t('Dialogue First')+'</h5><p>'+t('Ensure crisp, clean dialogue audio. Control background noise.')+'</p></div>'+
+            '<div class="brief-card"><h5>'+t('9:16 Safe')+'</h5><p>'+t('Frame shots with 16:9 widescreen context but keep subjects safe for 9:16 vertical crop.')+'</p></div>'+
+          '</div>'+
+        '</div>'+
+  
+        '<div class="brief-section" style="margin-top:20px;">'+
+          '<h4>'+t('4. Privacy Guardrails')+'</h4>'+
+          '<p style="font-size:12.5px;color:var(--muted);line-height:1.5;">'+t('Do NOT capture house numbers, private mail, computer screens, license plates, or family records without approval. Focus on the human story.')+'</p>'+
         '</div>'+
       '</div>'+
 
-      '<div class="brief-section">'+
-        '<h4>'+t('4. Privacy Guardrails')+'</h4>'+
-        '<p style="font-size:12.5px;color:var(--muted);line-height:1.5;">'+t('Do NOT capture house numbers, private mail, computer screens, license plates, or family records without approval. Focus on the human story.')+'</p>'+
-      '</div>'+
-
-      '<div class="modal-actions" style="margin-top:20px;display:flex;gap:8px;justify-content:flex-end;">'+
+      '<div class="modal-actions" style="flex-shrink:0;margin-top:20px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;">'+
         '<button class="tbtn" onclick="window.print()">'+t('Print / PDF')+'</button>'+
-        '<button class="cta-btn" onclick="closeModal()" style="min-height:38px;padding:8px 16px;">'+t('Done')+'</button>'+
+        '<button class="cta-btn" onclick="document.getElementById(\'modal-wrap\').innerHTML=\'\';" style="min-height:38px;padding:8px 16px;">'+t('Done')+'</button>'+
       '</div>'+
     '</div>'+
   '</div>';
