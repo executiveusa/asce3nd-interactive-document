@@ -218,7 +218,7 @@ async function loadFromCloud(){try{var res=await fetch(SUPABASE_RPC+'load_latest
 function loadLocal(){var hash=window.location.hash;if(hash&&hash.startsWith('#state=')){try{var d=JSON.parse(decodeURIComponent(atob(hash.slice(7))));state=Object.assign(blank(),d);window.location.hash='';return;}catch(e){}}try{var saved=localStorage.getItem(STORAGE_KEY);if(saved)state=Object.assign(blank(),JSON.parse(saved));}catch(e){}}
 function updateSaveMsg(){var el=document.getElementById('save-msg');if(!el)return;if(syncState==='CONFLICT_REQUIRES_REVIEW'){el.textContent='⚠ Conflict — tap to review';el.style.color='var(--gold)';return;}if(syncState==='SYNC_FAILED'){el.textContent='Cloud sync failed — local only';el.style.color='#dc2626';return;}if(syncState==='OFFLINE_CACHED'){el.textContent='Saved locally — cloud unavailable';el.style.color='var(--muted)';return;}if(syncState==='SAVING'){el.textContent='Saving to cloud…';el.style.color='var(--muted)';return;}el.style.color='';if(!state.lastSaved){el.textContent=t('Not saved');return;}var d=new Date(state.lastSaved);el.textContent=t('Saved')+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});if(syncState==='SYNCED'&&!state.lastSaved)el.textContent=t('Not saved');}
 `;
-  html = html.replace(/\/\* ══ PERSISTENCE [\s\S]*?function updateSaveMsg\(\)[\s\S]*?\n/, persistence);
+  html = html.replace(/\/\* ══ PERSISTENCE[\s\S]*?function updateSaveMsg\(\)\{[\s\S]*?\n\}/, persistence);
 
   html = html.replace("toast('Exported')", "toast(t('Exported'))");
   html = html.replace("toast('Workbook loaded')", "toast(t('Workbook loaded'))");
