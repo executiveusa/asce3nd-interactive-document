@@ -211,6 +211,51 @@ When updating this document:
 
 ---
 
-*AGENTS.md v1.0 — asc3nd Interactive Document Design Law*
+## 8. Chapter 2 Operating Memory (GRINIONS build, 2026-07-21)
+
+Appended for the Chapter 2 build. Does NOT override §1–§7; extends them.
+
+### 8.1 Builder & release authority
+- **Builder/Orchestrator:** GLM 5.2 operating under the GRINIONS v1 contract.
+- **Owner / final release approver:** Jeremy. No production merge/deploy without Jeremy's explicit approval of the exact judged commit.
+
+### 8.2 Canonical deployment target
+- Vercel project: `asc3nd-interactive-document` (`prj_9jk2ti63lLOesif9LKKhWJAl6aAr`, team `the-pauli-effect`).
+- The `asce3nd-interactive-document` project (extra 'e') is **deprecated** — never deploy there.
+
+### 8.3 Locked client facts (do not fabricate, do not guess)
+- Founders: **Otha Minnifield (female)** and **Elisha Minnifield (male)**, husband and wife.
+- Event: Community Cuts for Kids · "Fresh Fade, Fresh Grade" · Sun Aug 30, 2026, 12–3 PM · Tangles & Locs, 7425 Hardeson Rd, Everett, WA.
+- Capacity inputs: 5 barbers, 5 stations, 25–30 min/cut → ~30–36 theoretical cuts. **40 is NOT a public promise.**
+- Public rule: first come, first served. RSVP holds no queue place. Supplies/food free while supplies last.
+- Founder interview: Fri Jul 24, 2026, 18:00, founder residence.
+
+### 8.4 Never (Chapter 2 specific)
+- Never build a second independent RSVP database. Workbook reads from Supabase via adapter; it does not own registrations.
+- Never put media consent inside the public RSVP form. Consent is a separate system.
+- Never expose readable check-in/RSVP records to the camera operator.
+- Never use an AI-generated venue image. The approved real photo at `public/images/community-cuts/tangles-locs-exterior.webp` is the only Chapter 2 cover image.
+- Never auto-publish LLM-generated impact claims. All GLM learning outputs are drafts requiring Jeremy/ASC3ND approval.
+- Never label participation/media language "legal" or "attorney-approved." It is a review draft.
+
+### 8.5 State contract (Phase 02)
+- Precedence: **server truth > local cache > defaults.** Stale local cache may never overwrite newer server data.
+- Storage key `asc3nd-wb-v3` is unchanged. Chapter 1 keys in `blank()` are immutable.
+- Visible sync states required: Saved / Saving / Offline-cached / Sync failed / Conflict-requires-review / Last-updated timestamp.
+
+### 8.6 Where things live
+- Phase receipts: `ops/reports/`. Rollback baselines: `ops/rollback/`.
+- Chapter 2 docs: `docs/chapter-2/` (DECISION_RECORD, ARCHITECTURE, DATA_CONTRACT, RSVP_AND_CHECKIN, SAFETY_PROCEDURES, CONSENT_AND_MEDIA, ANTON_CAMERA_PLAN, IMPLEMENTATION_TICKETS, VERIFICATION_PLAN, ROLLBACK, HANDOFF).
+- OpenSpec changes: `openspec/changes/`.
+- Approved image source (do not edit): `assets-source/tangles-locs-exterior-original.png`.
+
+### 8.7 Active stop conditions
+- Email/SMS provider credentials absent → Phase 06 stops at provider decision gate.
+- Public landing-page repo not supplied → Phase 10 ships integration instructions only.
+- No event insurance identified → readiness engine must keep this as a visible HOLD risk.
+
+---
+
+*AGENTS.md v1.1 — asc3nd Interactive Document Design Law + Chapter 2 Operating Memory*
 *Built on Steve Krug's Don't Make Me Think and the asc3nd Design System v2.*
 *Black · Gold #F5A617 · White.*

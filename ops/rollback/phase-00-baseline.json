@@ -1,0 +1,59 @@
+{
+  "phase": "00",
+  "captured_at": "2026-07-21T13:00:00Z",
+  "repository": {
+    "canonical": "https://github.com/executiveusa/asce3nd-interactive-document",
+    "local_path": "C:\\Users\\execu\\Downloads\\asc3nd-frontend-website--main(2)\\asce3nd-interactive-document",
+    "default_branch": "main",
+    "baseline_sha": "e0dac26659d4df868a5ea6ae26b63eaa42f0b535",
+    "working_branch": "chapter-2/grinions-build",
+    "deployed_production_url": "https://asc3nd-interactive-document.vercel.app/",
+    "vercel_project": {
+      "name": "asc3nd-interactive-document",
+      "id": "prj_9jk2ti63lLOesif9LKKhWJAl6aAr",
+      "team": "the-pauli-effect",
+      "latest_production_ready": true
+    },
+    "fork_warning": "A second Vercel project 'asce3nd-interactive-document' (with extra 'e') exists and is DEPRECATED. All future deploys go to the no-'e' canonical project.",
+    "stray_file_note": "A 0-byte file named 'nul' exists at repo root (Windows reserved name). Left untouched — not part of any phase. Verify before any Windows-hosted deploy."
+  },
+  "chapter_1_preservation": {
+    "status": "PASS_AT_BASELINE",
+    "steps_in_ch1": ["welcome","followup","ch1","strategy","basics","mission","audience","voice","story","pillars","platforms","roadmap","rhythm","engagement","measurement","risk","summary"],
+    "storage_key": "asc3nd-wb-v3",
+    "supabase_rpc_base": "https://api.thepaulieffect.com/supabase/rest/v1/rpc/",
+    "supabase_project_id": "d0000000-0000-0000-0000-000000000001",
+    "verification_required_before_any_merge": "byte-for-byte equality of ch1 steps after ch2 edits"
+  },
+  "chapter_2_current_state": {
+    "steps_in_ch2": ["ch2_cover","ch2_interview","ch2_readiness","ch2_eventday","ch2_results","ch2_buildon"],
+    "known_bugs_at_baseline": [
+      "Founder gender pronouns are REVERSED: code uses he/his for Otha and her/she for Elisha. Truth per Anton brief + Jeremy: Otha=female, Elisha=male.",
+      "rCh2Eventday hardcodes 'Target capacity: 40' and 'Total supply: 100' as string literals, ignoring state.chapter2.capacity and state.chapter2.supplies.",
+      "RSVP table writes directly to state.chapter2.rsvpSummary.rsvps -> localStorage -> Supabase. No source-of-truth adapter. Must be labeled PLANNING DATA.",
+      "Volunteer staffing has no backup owner, contact, shift, or training-status fields.",
+      "No consent capture UI. safetyConsent{} and donations{} exist in blank() but no step renders them.",
+      "rCh2Interview camera brief is a modal fused to founder answers; needs to become a printable export.",
+      "Capacity uses Math.min() correctly but Event Day dashboard ignores the result."
+    ]
+  },
+  "assets": {
+    "tangles_locks_image": {
+      "source": "package assets/tangles-locs-exterior.webp",
+      "dimensions": "812x1020",
+      "format": "WebP VP8 YUV",
+      "destination": "public/images/community-cuts/tangles-locs-exterior.webp",
+      "alt_text": "Exterior of Tangles & Locs Salon and Spa, venue for Community Cuts for Kids.",
+      "original_preserved_at": "assets-source/tangles-locs-exterior-original.png"
+    }
+  },
+  "rollback": {
+    "method": "git revert of squash commit + redeploy main",
+    "preconditions": "No destructive DB migration in this build (RSVP adds new table + RPC, no DROP/ALTER of existing)",
+    "data_loss_risk": "NONE at baseline. Workbook saves to existing Supabase RPC save_submission/load_submission unchanged."
+  },
+  "stop_conditions_observed": [
+    "Phase 10 (landing page) BLOCKED until Jeremy supplies the landing-page repo URL.",
+    "Email/SMS provider credentials not present — Phase 06 will implement signed-email cancellation flow, place SMS behind feature flag, STOP at provider decision gate."
+  ]
+}
