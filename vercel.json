@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/api/document" }
+  "rewrites": [
+    { "source": "/event/community-cuts", "destination": "/public/event/community-cuts.html" },
+    { "source": "/event/community-cuts/", "destination": "/public/event/community-cuts.html" },
+    { "source": "/((?!api|event|public|images).*)", "destination": "/api/document" }
   ],
   "headers": [
     {

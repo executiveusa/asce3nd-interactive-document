@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en" data-device="touch">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Community Cuts for Kids — ASC3ND Collective | Aug 30, 2026</title>
+<meta name="description" content="Free haircuts, backpacks, and food for kids. Sunday, August 30, 2026, 12–3 PM at Tangles & Locs, Everett, WA. First come, first served. Reserve your spot.">
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Community Cuts for Kids — ASC3ND Collective">
+<meta property="og:description" content="Free haircuts, backpacks, and food for kids. Sunday, August 30, 2026, 12–3 PM at Tangles & Locs, Everett, WA.">
+<meta property="og:image" content="https://asc3nd-interactive-document.vercel.app/images/community-cuts/tangles-locs-exterior.webp">
+<meta property="og:url" content="https://asc3nd-interactive-document.vercel.app/event/community-cuts">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Community Cuts for Kids — ASC3ND Collective">
+<meta name="twitter:image" content="https://asc3nd-interactive-document.vercel.app/images/community-cuts/tangles-locs-exterior.webp">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#0a0a0a;--paper:#ffffff;--gold:#F5A617;--muted:#6e6e73;
+  --border:rgba(0,0,0,.09);--card:#f8f8f9;--red:#dc2626;
+  --spring:cubic-bezier(0.16,1,0.3,1);
+  --shadow:0 2px 8px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Barlow',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.nav-brand{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.02em;text-transform:uppercase}
+.nav-lang{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);border-radius:999px;padding:6px 14px;background:none;color:var(--ink);cursor:pointer;min-height:36px;transition:all 150ms var(--spring)}
+.nav-lang:active{transform:translateY(1px) scale(.98)}
+.nav-lang:hover{border-color:var(--gold)}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;animation:heroFade 800ms var(--spring) both}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.15) 0%,rgba(10,10,10,.55) 55%,rgba(10,10,10,.92) 100%)}
+.hero-inner{position:relative;z-index:2;padding:clamp(32px,7vw,72px) clamp(20px,5vw,56px);color:#fff;max-width:1000px}
+.hero-eyebrow{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,9vw,92px);line-height:.94;font-weight:800;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+.hero-sub{font-size:clamp(17px,2.8vw,24px);font-weight:600;color:var(--gold);margin:10px 0 22px;letter-spacing:.01em}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:26px}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.1);border:.5px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 14px}
+.hero-chip svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--ink);font-weight:700;font-size:15px;border:none;border-radius:999px;padding:15px 32px;cursor:pointer;text-decoration:none;min-height:48px;transition:transform 100ms var(--spring),box-shadow 200ms var(--spring);box-shadow:var(--shadow)}
+.cta:active{transform:translateY(1px) scale(.985)}
+.cta svg{width:16px;height:16px}
+html[data-device="fine"] .cta:hover{box-shadow:0 6px 20px rgba(245,166,23,.35)}
+@keyframes heroFade{from{opacity:0;transform:scale(1.015)}to{opacity:1;transform:scale(1)}}
+
+/* ── SECTIONS ── */
+section{padding:clamp(40px,7vw,80px) clamp(20px,5vw,56px);max-width:960px;margin:0 auto}
+section h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.section-sub{color:var(--muted);font-size:15px;margin-bottom:28px}
+
+/* ── WHAT TO EXPECT (2-col asymmetric) ── */
+.expect-grid{display:grid;grid-template-columns:1fr;gap:20px}
+.expect-item{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;background:var(--card);border:.5px solid var(--border);border-radius:12px;box-shadow:var(--shadow)}
+.expect-item svg{width:22px;height:22px;stroke:var(--ink);stroke-width:1.8;fill:none;flex-shrink:0;margin-top:2px}
+.expect-item h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.expect-item p{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* ── GOOD TO KNOW ── */
+.know-list{list-style:none;border-top:1px solid var(--border)}
+.know-list li{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.know-list li svg{width:18px;height:18px;stroke:var(--gold);stroke-width:2;fill:none;flex-shrink:0;margin-top:2px}
+
+/* ── RSVP FORM ── */
+.rsvp-form{max-width:560px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.field label .opt{font-weight:400;color:var(--muted)}
+.field input,.field select{width:100%;font-size:15px;font-family:inherit;padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:var(--paper);color:var(--ink);min-height:48px;transition:border-color 150ms var(--spring),box-shadow 150ms var(--spring)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,166,23,.2)}
+.field input.err,.field select.err{border-color:var(--red);box-shadow:0 0 0 2px rgba(220,38,38,.12)}
+.field-row{display:grid;grid-template-columns:1fr;gap:14px}
+.field-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.checkbox-field{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:18px}
+.checkbox-field input{width:18px;height:18px;accent-color:var(--gold);margin-top:2px;flex-shrink:0}
+.checkbox-field label{font-size:14px;font-weight:400;cursor:pointer;line-height:1.5}
+.hp{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+.submit-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--ink);color:#fff;font-weight:700;font-size:16px;border:none;border-radius:8px;padding:15px 24px;cursor:pointer;min-height:52px;transition:transform 100ms var(--spring),background 200ms var(--spring)}
+.submit-btn:active{transform:translateY(1px) scale(.985)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed}
+.submit-btn.success{background:#10B981}
+.dots{display:inline-flex;gap:4px}
+.dots span{width:5px;height:5px;border-radius:50%;background:currentColor;animation:dotPulse 1.2s var(--spring) infinite}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes dotPulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.form-helper{font-size:13px;color:var(--muted);margin-top:12px;text-align:center}
+
+/* ── STATES ── */
+.rsvp-success{max-width:560px;text-align:center;padding:40px 20px}
+.rsvp-success svg{width:56px;height:56px;stroke:var(--gold);stroke-width:2.5;fill:none;stroke-dasharray:80;stroke-dashoffset:80;animation:checkDraw 600ms var(--spring) forwards}
+@keyframes checkDraw{to{stroke-dashoffset:0}}
+.rsvp-success h3{font-size:24px;font-weight:700;margin:16px 0 12px}
+.rsvp-success p{font-size:14px;color:var(--muted);line-height:1.6;max-width:480px;margin:0 auto 8px}
+.rsvp-success .lock-copy{font-size:14px;color:var(--ink);background:var(--card);border:.5px solid var(--border);border-radius:10px;padding:16px 18px;margin:16px auto;max-width:480px;text-align:left;line-height:1.55}
+.rsvp-error{max-width:560px;padding:16px 18px;background:rgba(220,38,38,.05);border-left:3px solid var(--red);border-radius:8px;margin-bottom:20px}
+.rsvp-error[role=alert]{color:var(--red);font-size:14px;font-weight:600}
+
+/* ── FOOTER ── */
+footer{padding:40px 20px;text-align:center;border-top:1px solid var(--border);margin-top:40px}
+footer p{font-size:13px;color:var(--muted);line-height:1.7}
+footer a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+
+/* ── REVEAL ── */
+[data-reveal]{opacity:0;transform:translateY(12px);transition:opacity 600ms var(--spring),transform 600ms var(--spring);transition-delay:calc(var(--i,0) * 80ms)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(min-width:620px){
+  .field-row{grid-template-columns:1fr 1fr}
+}
+@media(min-width:768px){
+  .expect-grid{grid-template-columns:1fr 1fr;gap:20px}
+  .expect-item:nth-child(3){grid-column:1/-1}
+}
+@media(min-width:1024px){
+  .hero-inner{max-width:700px}
+  section{max-width:1000px}
+  .expect-grid{gap:24px}
+}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  [data-reveal]{opacity:1!important;transform:none!important}
+  .hero-img{animation:none!important;opacity:1!important}
+}
+
+/* ── PRINT (family flyer) ── */
+@media print{
+  .nav,.cta,.rsvp section,.rsvp-form,.rsvp-success,.rsvp-error,footer .qr-area{display:none!important}
+  .hero{min-height:auto!important;page-break-after:always}
+  .hero-img{position:relative!important;height:280px!important;object-fit:cover!important}
+  body{font-size:11pt}
+  .hero h1{font-size:36pt!important}
+  .hero-sub{font-size:14pt!important}
+  .hero-chips{gap:4px 12px}
+  .hero-chip{font-size:9pt;padding:4px 10px}
+  .know-list{font-size:9pt}
+  .flyer-qr{display:block!important;text-align:center;margin-top:12px}
+  .flyer-qr svg{width:100px;height:100px}
+}
+.flyer-qr{display:none}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">ASC3ND</div>
+  <button class="nav-lang" id="lang-toggle" aria-label="Toggle language">EN / ES</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" data-reveal style="--i:0;padding:0;max-width:none;">
+  <img class="hero-img" src="/images/community-cuts/tangles-locs-exterior.webp" alt="Exterior of Tangles & Locs Salon and Spa, venue for Community Cuts for Kids in Everett, WA." fetchpriority="high">
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <span class="hero-eyebrow" data-en="ASC3ND Collective presents" data-es="ASC3ND Collective presenta">ASC3ND Collective presents</span>
+    <h1>Community Cuts for Kids</h1>
+    <p class="hero-sub">Fresh Fade, Fresh Grade</p>
+    <div class="hero-chips">
+      <span class="hero-chip"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg><span data-en="Sunday, August 30, 2026" data-es="Domingo 30 de agosto de 2026">Sunday, August 30, 2026</span></span>
+      <span class="hero-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>12:00 PM – 3:00 PM PT</span>
+      <span class="hero-chip"><svg viewBox="0 0 24 24"><path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span data-en="Tangles & Locs · Everett, WA" data-es="Tangles & Locs · Everett, WA">Tangles & Locs · Everett, WA</span></span>
+    </div>
+    <a href="#rsvp-form" class="cta" id="hero-cta">
+      <span data-en="Reserve a spot" data-es="Reserva tu lugar">Reserve a spot</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <!-- QR for print flyer -->
+  <div class="flyer-qr" id="flyer-qr"></div>
+</section>
+
+<!-- ── WHAT TO EXPECT ── -->
+<section class="expect" data-reveal style="--i:1">
+  <h2 data-en="What to expect" data-es="Qué esperar">What to expect</h2>
+  <p class="section-sub" data-en="Everything is free. Here's what we're offering." data-es="Todo es gratis. Esto es lo que ofrecemos.">Everything is free. Here's what we're offering.</p>
+  <div class="expect-grid">
+    <div class="expect-item">
+      <svg viewBox="0 0 24 24"><path d="M6 8a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8z"/><path d="M7 14v6M17 14v6M9 21h6"/></svg>
+      <div><h3 data-en="Free haircuts" data-es="Cortes de pelo gratis">Free haircuts</h3>
+      <p data-en="Five professional barbers. Basic cut, line-up, fade, or trim. First come, first served — about 25–30 minutes per cut." data-es="Cinco barberos profesionales. Corte básico, diseño, degradado o recorte. Por orden de llegada — aproximadamente 25–30 minutos por corte.">Five professional barbers. Basic cut, line-up, fade, or trim. First come, first served — about 25–30 minutes per cut.</p></div>
+    </div>
+    <div class="expect-item">
+      <svg viewBox="0 0 24 24"><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2M4 7h16M4 7l1 13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2l1-13"/><path d="M9 12v6M15 12v6"/></svg>
+      <div><h3 data-en="Free supplies" data-es="Útiles escolares gratis">Free supplies</h3>
+      <p data-en="Backpacks and school supplies. Children must be present to receive supplies. Available while supplies last." data-es="Mochilas y útiles escolares. Los niños deben estar presentes para recibir suministros. Disponibles hasta agotar existencias.">Backpacks and school supplies. Children must be present to receive supplies. Available while supplies last.</p></div>
+    </div>
+    <div class="expect-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+      <div><h3 data-en="Free food" data-es="Comida gratis">Free food</h3>
+      <p data-en="Hamburgers and hot dogs, served by ASC3ND volunteers. While supplies last." data-es="Hamburguesas y perros calientes, servidos por voluntarios de ASC3ND. Hasta agotar existencias.">Hamburgers and hot dogs, served by ASC3ND volunteers. While supplies last.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GOOD TO KNOW ── -->
+<section class="know" data-reveal style="--i:2">
+  <h2 data-en="Good to know" data-es="Bueno saber">Good to know</h2>
+  <p class="section-sub" data-en="A few things to keep in mind." data-es="Algunas cosas a tener en cuenta.">A few things to keep in mind.</p>
+  <ul class="know-list">
+    <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><span data-en="Your RSVP helps us plan, but it does not guarantee a haircut. Haircuts are first come, first served while barber capacity lasts." data-es="Tu RSVP nos ayuda a planificar, pero no garantiza un corte. Los cortes son por orden de llegada hasta donde alcance la capacidad.">Your RSVP helps us plan, but it does not guarantee a haircut. Haircuts are first come, first served while barber capacity lasts.</span></li>
+    <li><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span data-en="A parent or guardian must remain with every child at all times." data-es="Un padre o tutor debe permanecer con cada niño en todo momento.">A parent or guardian must remain with every child at all times.</span></li>
+    <li><svg viewBox="0 0 24 24"><path d="M20 7L9 18l-5-5"/></svg><span data-en="Children must be present to receive backpacks and supplies." data-es="Los niños deben estar presentes para recibir mochilas y útiles.">Children must be present to receive backpacks and supplies.</span></li>
+    <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg><span data-en="No drugs or alcohol." data-es="No se permiten drogas ni alcohol.">No drugs or alcohol.</span></li>
+  </ul>
+</section>
+
+<!-- ── RSVP FORM ── -->
+<section class="rsvp" data-reveal style="--i:3" id="rsvp-form">
+  <h2 data-en="Reserve your spot" data-es="Reserva tu lugar">Reserve your spot</h2>
+  <p class="section-sub" data-en="Takes about 60 seconds. We'll send event updates to your contact info." data-es="Toma unos 60 segundos. Enviaremos actualizaciones del evento a tu información de contacto.">Takes about 60 seconds. We'll send event updates to your contact info.</p>
+
+  <form class="rsvp-form" id="rsvp" novalidate>
+    <div class="field">
+      <label for="g-name" data-en="Your name" data-es="Tu nombre">Your name</label>
+      <input type="text" id="g-name" name="guardian_name" autocomplete="name" required>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="g-email" data-en="Email" data-es="Correo electrónico">Email <span class="opt" data-en="(email or phone)" data-es="(correo o teléfono)">(email or phone)</span></label>
+        <input type="email" id="g-email" name="email" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="g-phone" data-en="Phone" data-es="Teléfono">Phone</label>
+        <input type="tel" id="g-phone" name="phone" autocomplete="tel">
+      </div>
+    </div>
+    <p class="field-hint" id="contact-hint" data-en="Please provide at least one — email or phone." data-es="Por favor proporciona al menos uno — correo o teléfono." style="margin-bottom:14px;"></p>
+    <div class="field-row">
+      <div class="field">
+        <label for="g-kids" data-en="Number of children" data-es="Número de niños">Number of children</label>
+        <input type="number" id="g-kids" name="children_count" min="0" max="10" value="1" required>
+      </div>
+      <div class="field">
+        <label for="g-age" data-en="Age range" data-es="Rango de edad">Age range</label>
+        <select id="g-age" name="age_range">
+          <option value="" data-en="Prefer not to say" data-es="Prefiero no decir">Prefer not to say</option>
+          <option value="0-4">0–4</option>
+          <option value="5-8">5–8</option>
+          <option value="9-12">9–12</option>
+          <option value="13-17">13–17</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="g-service" data-en="Haircut service" data-es="Servicio de corte">Haircut service</label>
+        <select id="g-service" name="requested_service">
+          <option value="haircut" data-en="Basic haircut" data-es="Corte básico">Basic haircut</option>
+          <option value="lineup">Line-up</option>
+          <option value="fade">Fade</option>
+          <option value="trim">Trim</option>
+          <option value="unsure" data-en="Not sure yet" data-es="No estoy seguro">Not sure yet</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="g-window" data-en="Arrival window" data-es="Hora de llegada">Arrival window <span class="opt" data-en="(planning only)" data-es="(solo planificación)">(planning only)</span></label>
+        <select id="g-window" name="arrival_window">
+          <option value="12-1">12:00 – 1:00 PM</option>
+          <option value="1-2">1:00 – 2:00 PM</option>
+          <option value="2-3">2:00 – 3:00 PM</option>
+          <option value="unsure" data-en="Not sure" data-es="No estoy seguro">Not sure</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="g-lang" data-en="Preferred language" data-es="Idioma preferido">Preferred language</label>
+      <select id="g-lang" name="preferred_language">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+    <label class="checkbox-field">
+      <input type="checkbox" id="g-access" name="accessibility_contact" value="true">
+      <label for="g-access" data-en="Please contact me privately about accessibility." data-es="Por favor contáctenme en privado sobre accesibilidad.">Please contact me privately about accessibility.</label>
+    </label>
+    <!-- Honeypot -->
+    <input type="text" name="company_website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="submit" class="submit-btn" id="submit-btn">
+      <span data-en="Send my RSVP" data-es="Enviar mi RSVP">Send my RSVP</span>
+    </button>
+    <p class="form-helper" data-en="This RSVP helps us plan but does not guarantee a haircut." data-es="Este RSVP nos ayuda a planificar pero no garantiza un corte.">This RSVP helps us plan but does not guarantee a haircut.</p>
+  </form>
+
+  <!-- Success state -->
+  <div class="rsvp-success" id="rsvp-success" hidden role="status" aria-live="polite">
+    <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" stroke-dasharray="151" stroke-dashoffset="151"/><path d="M16 27l7 7 14-14" stroke-dasharray="36" stroke-dashoffset="36"/></svg>
+    <h3 data-en="You're on the list." data-es="Estás en la lista.">You're on the list.</h3>
+    <p data-en="We'll send event updates to the contact info you provided." data-es="Enviaremos actualizaciones del evento a la información de contacto que proporcionaste.">We'll send event updates to the contact info you provided.</p>
+    <div class="lock-copy" id="lock-copy"></div>
+  </div>
+
+  <!-- Error state -->
+  <div class="rsvp-error" id="rsvp-error" hidden role="alert" aria-live="assertive"></div>
+</section>
+
+<footer>
+  <p>© 2026 ASC3ND Collective · Macs Digital Media</p>
+  <p data-en="Questions? Reply to your confirmation message." data-es="¿Preguntas? Responde a tu mensaje de confirmación.">Questions? Reply to your confirmation message.</p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+/* ── DEVICE DETECT ── */
+var isTouch=window.matchMedia('(hover: none)').matches;
+document.documentElement.setAttribute('data-device',isTouch?'touch':'fine');
+
+/* ── CONNECTION-AWARE ── */
+var conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+var slowConn=conn&&(conn.effectiveType==='slow-2g'||conn.effectiveType==='2g');
+if(slowConn){document.querySelector('.hero-img').style.animation='none';document.querySelector('.hero-img').style.opacity='1';}
+
+/* ── REVEAL ON SCROLL ── */
+var reveals=document.querySelectorAll('[data-reveal]');
+if('IntersectionObserver' in window&&!slowConn){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{rootMargin:'0px 0px -40px 0px',threshold:0.1});
+  reveals.forEach(function(el){io.observe(el);});
+}else{reveals.forEach(function(el){el.classList.add('in');});}
+
+/* ── MAGNETIC CTA (desktop only) ── */
+var cta=document.getElementById('hero-cta');
+if(cta&&!isTouch&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  cta.addEventListener('mousemove',function(e){
+    var r=cta.getBoundingClientRect();
+    var x=e.clientX-r.left-r.width/2;
+    var y=e.clientY-r.top-r.height/2;
+    cta.style.transform='translate('+(x*0.08)+'px,'+(y*0.12)+'px)';
+  });
+  cta.addEventListener('mouseleave',function(){cta.style.transform='';});
+}
+
+/* ── LANG TOGGLE ── */
+var lang='en';
+var lockCopyEN="Thank you for registering for Community Cuts for Kids. Your RSVP helps ASC3ND plan for the event, but it does not reserve or guarantee a haircut. Haircuts are free, limited, and provided first come, first served while barber capacity lasts. Children must be present and remain with a parent or guardian. Backpacks, school supplies, and food are free while supplies last. ASC3ND will send event updates using the contact information you provided. Use the cancellation link or reply CANCEL to the confirmation text if your plans change.";
+var lockCopyES="Gracias por registrarte para Community Cuts for Kids. Tu RSVP ayuda a ASC3ND a planificar el evento, pero no reserva ni garantiza un corte de pelo. Los cortes son gratuitos, limitados y se proporcionan por orden de llegada mientras haya capacidad. Los niños deben estar presentes y permanecer con un padre o tutor. Las mochilas, los útiles escolares y la comida son gratuitos hasta agotar existencias. ASC3ND enviará actualizaciones del evento usando la información de contacto que proporcionaste. Usa el enlace de cancelación o responde CANCEL al mensaje de confirmación si cambian tus planes.";
+
+function applyLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.querySelectorAll('[data-'+l+']').forEach(function(el){
+    var txt=el.getAttribute('data-'+l);
+    if(txt)el.textContent=txt;
+  });
+}
+document.getElementById('lang-toggle').addEventListener('click',function(){
+  applyLang(lang==='en'?'es':'en');
+  document.getElementById('lock-copy').textContent=lang==='en'?lockCopyEN:lockCopyES;
+});
+
+/* ── FORM ── */
+var form=document.getElementById('rsvp');
+var submitBtn=document.getElementById('submit-btn');
+var successDiv=document.getElementById('rsvp-success');
+var errorDiv=document.getElementById('rsvp-error');
+var lockCopyDiv=document.getElementById('lock-copy');
+lockCopyDiv.textContent=lockCopyEN;
+
+function setError(msg){
+  errorDiv.hidden=false;errorDiv.textContent=msg;
+  errorDiv.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function clearErrors(){
+  errorDiv.hidden=true;errorDiv.textContent='';
+  form.querySelectorAll('.err').forEach(function(el){el.classList.remove('err');});
+}
+function fieldErr(id){var el=document.getElementById(id);if(el)el.classList.add('err');}
+
+form.addEventListener('submit',async function(e){
+  e.preventDefault();
+  clearErrors();
+  var data={
+    guardian_name:form.guardian_name.value.trim(),
+    email:form.email.value.trim(),
+    phone:form.phone.value.trim(),
+    children_count:parseInt(form.children_count.value,10)||0,
+    age_range:form.age_range.value||null,
+    requested_service:form.requested_service.value||null,
+    arrival_window:form.arrival_window.value||null,
+    preferred_language:form.preferred_language.value||'en',
+    accessibility_contact:form.accessibility_contact.checked,
+    company_website:form.company_website.value
+  };
+  /* Honeypot */
+  if(data.company_website){
+    form.hidden=true;successDiv.hidden=false;
+    lockCopyDiv.textContent=lang==='en'?lockCopyEN:lockCopyES;
+    return;
+  }
+  /* Client-side validation */
+  if(!data.guardian_name){fieldErr('g-name');return setError(lang==='es'?'Por favor escribe tu nombre.':'Please enter your name.');}
+  if(!data.email&&!data.phone){
+    fieldErr('g-email');fieldErr('g-phone');
+    return setError(lang==='es'?'Por favor proporciona al menos un correo o teléfono.':'Please provide at least an email or phone number.');
+  }
+  if(data.children_count<0||data.children_count>10){fieldErr('g-kids');return setError('Invalid children count.');}
+
+  /* Loading state */
+  submitBtn.disabled=true;
+  submitBtn.innerHTML='<span class="dots"><span></span><span></span><span></span></span>';
+
+  try{
+    var r=await fetch('/api/rsvp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    var j=await r.json().catch(function(){return{};});
+    if(r.ok&&j.ok){
+      form.hidden=true;
+      successDiv.hidden=false;
+      lockCopyDiv.textContent=lang==='en'?lockCopyEN:lockCopyES;
+      successDiv.scrollIntoView({behavior:'smooth',block:'center'});
+      /* Morph submit to success */
+      submitBtn.classList.add('success');
+      submitBtn.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>';
+    }else if(r.status===422){
+      var msgs=[];
+      if(j.fields&&j.fields.length){
+        j.fields.forEach(function(f){
+          if(f.field==='guardian_name')fieldErr('g-name');
+          else if(f.field==='email'||f.field==='contact')fieldErr('g-email');
+          else if(f.field==='phone')fieldErr('g-phone');
+          else if(f.field==='children_count')fieldErr('g-kids');
+        });
+      }
+      setError(lang==='es'?'Por favor revisa los campos destacados.':'Please check the highlighted fields and try again.');
+      submitBtn.disabled=false;
+      submitBtn.innerHTML='<span data-en="Send my RSVP" data-es="Enviar mi RSVP">'+(lang==='es'?'Enviar mi RSVP':'Send my RSVP')+'</span>';
+    }else if(r.status===429){
+      setError(lang==='es'?'Has enviado varios RSVPs. Espera unos minutos.':'You\'ve sent several RSVPs — please wait a few minutes.');
+      submitBtn.disabled=false;
+      submitBtn.innerHTML='<span>'+(lang==='es'?'Enviar mi RSVP':'Send my RSVP')+'</span>';
+    }else{
+      setError(lang==='es'?'Algo salió mal. Inténtalo de nuevo.':'Something went wrong. Please try again.');
+      submitBtn.disabled=false;
+      submitBtn.innerHTML='<span>'+(lang==='es'?'Enviar mi RSVP':'Send my RSVP')+'</span>';
+    }
+  }catch(err){
+    setError(lang==='es'?'Sin conexión. Revisa tu internet.':'Network error. Check your connection.');
+    submitBtn.disabled=false;
+    submitBtn.innerHTML='<span>'+(lang==='es'?'Enviar mi RSVP':'Send my RSVP')+'</span>';
+  }
+});
+})();
+</script>
+</body>
+</html>
