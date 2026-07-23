@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-label="ASC3ND Collective logo">
+  <!-- Circular border -->
+  <circle cx="100" cy="100" r="94" stroke="#F5A617" stroke-width="3" fill="#0a0a0a"/>
+  <circle cx="100" cy="100" r="88" stroke="#F5A617" stroke-width="1" fill="none" opacity="0.5"/>
+
+  <!-- Crown (simplified geometric) -->
+  <path d="M82 42 L88 32 L94 42 L100 30 L106 42 L112 32 L118 42 L118 52 L82 52 Z" fill="#F5A617" stroke="#F5A617" stroke-width="0.5" stroke-linejoin="round"/>
+
+  <!-- A3 monogram — A in white, 3 in gold with upward arrow -->
+  <!-- A -->
+  <path d="M70 112 L80 78 L90 112 M74 100 L86 100" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- 3 -->
+  <path d="M95 78 C 88 78 88 95 95 95 C 88 95 88 112 95 112" stroke="#F5A617" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <!-- Upward arrow integrated with 3 -->
+  <path d="M100 88 L104 82 L108 88 M104 82 L104 112" stroke="#F5A617" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+  <!-- ASC3ND wordmark -->
+  <text x="100" y="132" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="14" font-weight="800" letter-spacing="2" fill="#ffffff">ASC<tspan fill="#F5A617">3</tspan>ND</text>
+
+  <!-- Divider lines -->
+  <line x1="62" y1="140" x2="78" y2="140" stroke="#F5A617" stroke-width="1"/>
+  <line x1="122" y1="140" x2="138" y2="140" stroke="#F5A617" stroke-width="1"/>
+
+  <!-- COLLECTIVE -->
+  <text x="100" y="145" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="7" font-weight="600" letter-spacing="3" fill="#ffffff">COLLECTIVE</text>
+
+  <!-- Four diverse figures (simplified geometric) -->
+  <!-- Figure 1: white -->
+  <circle cx="74" cy="160" r="4" fill="#ffffff"/>
+  <path d="M74 165 L74 175 M70 168 L78 168" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Figure 2: gold -->
+  <circle cx="90" cy="160" r="4" fill="#F5A617"/>
+  <path d="M90 165 L90 175 M86 168 L94 168" stroke="#F5A617" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Figure 3: teal -->
+  <circle cx="110" cy="160" r="4" fill="#14b8a6"/>
+  <path d="M110 165 L110 175 M106 168 L114 168" stroke="#14b8a6" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Figure 4: purple -->
+  <circle cx="126" cy="160" r="4" fill="#a78bfa"/>
+  <path d="M126 165 L126 175 M122 168 L130 168" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Heart outline -->
+  <path d="M100 185 C 96 180 92 182 92 186 C 92 189 100 193 100 193 C 100 193 108 189 108 186 C 108 182 104 180 100 185 Z" stroke="#F5A617" stroke-width="1.2" fill="none"/>
+</svg>
