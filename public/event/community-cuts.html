@@ -68,10 +68,11 @@ html[data-theme="dark"] .moon-icon{display:none}
 .nav-lang:hover{border-color:var(--gold)}
 
 /* ── HERO ── */
-.hero{position:relative;min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
-.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;animation:heroFade 800ms var(--spring) both}
-.hero-shade{position:absolute;inset:0;background:linear-gradient(180deg,var(--hero-shade-start) 0%,var(--hero-shade-mid) 55%,var(--hero-shade-end) 100%)}
-.hero-inner{position:relative;z-index:2;padding:clamp(32px,7vw,72px) clamp(20px,5vw,56px);color:#fff;max-width:1000px}
+.hero{position:relative;min-height:auto;display:flex;flex-direction:column;overflow:hidden}
+.hero-img-wrap{position:relative;width:100%;height:clamp(320px,50vh,560px);overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%;animation:heroFade 800ms var(--spring) both}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(180deg,var(--hero-shade-start) 0%,var(--hero-shade-mid) 70%,var(--hero-shade-end) 100%)}
+.hero-inner{position:relative;z-index:2;padding:clamp(28px,5vw,48px) clamp(20px,5vw,56px);color:#fff;max-width:1000px;background:#0a0a0a}
 .hero-eyebrow{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:14px;font-weight:600}
 .hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,9vw,92px);line-height:.94;font-weight:800;margin:0;letter-spacing:-.02em;text-transform:uppercase}
 .hero-sub{font-size:clamp(17px,2.8vw,24px);font-weight:600;color:var(--gold);margin:10px 0 22px;letter-spacing:.01em}
@@ -187,8 +188,7 @@ footer a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 
 <nav class="nav">
   <a href="/event/community-cuts" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);">
-    <img src="/public/images/asc3nd-logo.svg" alt="ASC3ND Collective" width="36" height="36" style="border-radius:50%;">
-    <span class="nav-brand">ASC<tspan style="color:var(--gold)">3</tspan>ND</span>
+    <span class="nav-brand">ASC<span style="color:var(--gold)">3</span>ND</span>
   </a>
   <div style="display:flex;align-items:center;gap:10px;">
     <button class="nav-icon-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
@@ -201,14 +201,15 @@ footer a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 
 <!-- ── HERO ── -->
 <section class="hero" data-reveal style="--i:0;padding:0;max-width:none;">
-  <img class="hero-img" src="/public/images/community-cuts/tangles-locs-exterior.webp" alt="Exterior of Tangles & Locs Salon and Spa, venue for Community Cuts for Kids in Everett, WA." fetchpriority="high">
-  <div class="hero-shade" aria-hidden="true"></div>
-  <div class="hero-location-badge" aria-hidden="true">
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
-    <span>Tangles & Locs</span>
+  <div class="hero-img-wrap">
+    <img class="hero-img" src="/public/images/community-cuts/tangles-locs-exterior.webp" alt="Exterior of Tangles & Locs Salon and Spa, venue for Community Cuts for Kids in Everett, WA." fetchpriority="high">
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-location-badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      <span>Tangles & Locs</span>
+    </div>
   </div>
   <div class="hero-inner">
-    <img src="/public/images/asc3nd-logo.svg" alt="ASC3ND Collective" width="56" height="56" style="border-radius:50%;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.3);">
     <span class="hero-eyebrow" data-en="ASC3ND Collective presents" data-es="ASC3ND Collective presenta">ASC3ND Collective presents</span>
     <h1>Community Cuts for Kids</h1>
     <p class="hero-sub">Fresh Fade, Fresh Grade</p>
