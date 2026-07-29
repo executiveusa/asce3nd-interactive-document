@@ -2,28 +2,36 @@
 // Public endpoint: accepts the family RSVP form, calls create_rsvp RPC,
 // dispatches best-effort notifications, returns approved copy + confirmation_code.
 
+const crypto = require('crypto');
 const { sendRsvpConfirmation, sendOpsAlert } = require('./_lib/mailer');
 
-// -- Supabase bridge config (mirrors api/health-supabase.js, prefers env) --
-const FALLBACK_RPC  = 'https://api.thepaulieffect.com/supabase/rest/v1/rpc/';
-const FALLBACK_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzcyNzc2NjczLCJleHAiOjE5MzA0NTY2NzN9.rl1mc-GgpG6nQArbEfFAKOcMvzL7rrgzPFT-LlCiCy4';
+function requiredEnv(name) {
+  const value = process.env[name];
+  if (!value || !value.trim()) {
+    throw new Error(`missing_required_env:${name}`);
+  }
+  return value.trim();
+}
 
-const SUPABASE_RPC  = process.env.SUPABASE_RPC  || FALLBACK_RPC;
-const SUPABASE_ANON = process.env.SUPABASE_ANON || FALLBACK_ANON;
+function rpcBaseUrl() {
+  const raw = requiredEnv('SUPABASE_RPC');
+  return raw.endsWith('/') ? raw : `${raw}/`;
+}
 
 // Locked event id (Phase 06 build contract).
 const EVENT_ID = 'd0000000-0000-0000-0000-000000000002';
 
-// CORS allow-list. Default-deny. Configure via RSVP_PUBLIC_ORIGIN (comma list).
-const DEFAULT_ORIGINS = ['https://asc3nd-interactive-document.vercel.app'];
+// CORS allow-list. Required and default-deny.
+// Configure RSVP_PUBLIC_ORIGIN as a comma-separated list, including:
+// https://asc3nd-frontend.vercel.app,https://asc3nd-interactive-document.vercel.app
 function allowedOrigins() {
-  const raw = process.env.RSVP_PUBLIC_ORIGIN;
-  if (!raw || !raw.trim()) return DEFAULT_ORIGINS;
-  return raw.split(',').map(s => s.trim()).filter(Boolean);
+  return requiredEnv('RSVP_PUBLIC_ORIGIN')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
 }
 
-// Strict field whitelist. Rejects anything not listed (P0 fix for the
-// "anything Asc3nd should know?" open-notes bug class).
+// Strict field whitelist. Rejects anything not listed.
 const ALLOWED_FIELDS = new Set([
   'guardian_name',
   'email',
@@ -47,23 +55,9 @@ const LANGUAGES       = new Set(['en','es']);
 const CONFIRMATION_MESSAGE =
   "Thank you for registering for Community Cuts for Kids. Your RSVP helps ASC3ND plan for the event, but it does not reserve or guarantee a haircut. Haircuts are free, limited, and provided first come, first served while barber capacity lasts. Children must be present and remain with a parent or guardian. Backpacks, school supplies, and food are free while supplies last. ASC3ND will send event updates using the contact information you provided. Use the cancellation link or reply CANCEL to the confirmation text if your plans change.";
 
-// -- In-memory rate limit (per Vercel instance, IP bucket) -----------------
-const RATE_WINDOW_MS = 10 * 60 * 1000; // 10 min
-const RATE_MAX_HITS  = 5;
-const rateBuckets = new Map();
+const RATE_WINDOW_SECONDS = 10 * 60;
+const RATE_MAX_HITS = 5;
 
-function rateLimitHit(ip) {
-  const now = Date.now();
-  let b = rateBuckets.get(ip);
-  if (!b || now - b.windowStart > RATE_WINDOW_MS) {
-    b = { count: 0, windowStart: now };
-    rateBuckets.set(ip, b);
-  }
-  b.count += 1;
-  return b.count > RATE_MAX_HITS;
-}
-
-// -- Helpers --------------------------------------------------------------
 function redact(value) {
   if (!value || typeof value !== 'string') return '***';
   return value.slice(0, 2) + '***';
@@ -76,12 +70,43 @@ function clientIp(req) {
 }
 
 function rpcHeaders() {
+  const anon = requiredEnv('SUPABASE_ANON');
   return {
     'Content-Type': 'application/json',
-    apikey: SUPABASE_ANON,
-    Authorization: `Bearer ${SUPABASE_ANON}`,
+    apikey: anon,
+    Authorization: `Bearer ${anon}`,
     'Content-Profile': 'work',
   };
+}
+
+async function callRpc(name, params) {
+  const response = await fetch(`${rpcBaseUrl()}${name}`, {
+    method: 'POST',
+    headers: rpcHeaders(),
+    body: JSON.stringify(params || {}),
+  });
+  const text = await response.text();
+  let json = null;
+  try { json = JSON.parse(text); } catch {}
+  return { response, text, json };
+}
+
+function rateBucket(ip) {
+  const secret = requiredEnv('RSVP_RATE_LIMIT_SECRET');
+  return crypto.createHmac('sha256', secret).update(ip).digest('hex');
+}
+
+async function consumeRateLimit(ip) {
+  const { response, text, json } = await callRpc('consume_rsvp_rate_limit', {
+    p_bucket_key: rateBucket(ip),
+    p_window_seconds: RATE_WINDOW_SECONDS,
+    p_max_hits: RATE_MAX_HITS,
+  });
+
+  if (!response.ok || !json || typeof json.allowed !== 'boolean') {
+    throw new Error(`rate_limit_rpc_failed:${response.status}:${(text || '').slice(0, 120)}`);
+  }
+  return json;
 }
 
 function applyCors(res, origin) {
@@ -114,13 +139,13 @@ function validate(body) {
   if (!Number.isInteger(children_count) || children_count < 0 || children_count > 10) {
     errors.push({ field: 'children_count', code: 'invalid' });
   }
-  if (body.age_range && !AGE_RANGES.has(body.age_range))            errors.push({ field: 'age_range', code: 'invalid' });
+  if (body.age_range && !AGE_RANGES.has(body.age_range)) errors.push({ field: 'age_range', code: 'invalid' });
   if (body.requested_service && !SERVICES.has(body.requested_service)) errors.push({ field: 'requested_service', code: 'invalid' });
   if (body.arrival_window && !ARRIVAL_WINDOWS.has(body.arrival_window)) errors.push({ field: 'arrival_window', code: 'invalid' });
   if (body.preferred_language && !LANGUAGES.has(body.preferred_language)) errors.push({ field: 'preferred_language', code: 'invalid' });
 
   const accessibility_contact = body.accessibility_contact === true || body.accessibility_contact === 'true';
-  const contact_privately     = body.contact_privately === true || body.contact_privately === 'true';
+  const contact_privately = body.contact_privately === true || body.contact_privately === 'true';
 
   if (errors.length) return { ok: false, errors };
 
@@ -131,9 +156,9 @@ function validate(body) {
       email: email || null,
       phone: phone || null,
       children_count,
-      age_range:          body.age_range          || null,
-      requested_service:  body.requested_service  || null,
-      arrival_window:     body.arrival_window     || null,
+      age_range: body.age_range || null,
+      requested_service: body.requested_service || null,
+      arrival_window: body.arrival_window || null,
       preferred_language: body.preferred_language || 'en',
       accessibility_contact,
       contact_privately,
@@ -141,19 +166,38 @@ function validate(body) {
   };
 }
 
-// -- Handler --------------------------------------------------------------
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
+  let origins;
+  try {
+    origins = allowedOrigins();
+    requiredEnv('SUPABASE_RPC');
+    requiredEnv('SUPABASE_ANON');
+    requiredEnv('RSVP_RATE_LIMIT_SECRET');
+  } catch (err) {
+    console.error('[rsvp] configuration_error %s', err && err.message ? err.message : String(err));
+    return res.status(503).json({ ok: false, error: 'service_not_configured', code: 'config' });
+  }
+
   const origin = req.headers.origin || '';
-  applyCors(res, origin);
+  if (origin && origins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
 
   if (req.method === 'OPTIONS') {
-    return res.status(origin && allowedOrigins().includes(origin) ? 204 : 403).end();
+    return res.status(origin && origins.includes(origin) ? 204 : 403).end();
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ ok: false, error: 'method_not_allowed', code: 'method' });
+  }
+
+  if (origin && !origins.includes(origin)) {
+    return res.status(403).json({ ok: false, error: 'origin_not_allowed', code: 'cors' });
   }
 
   let body;
@@ -168,9 +212,16 @@ module.exports = async function handler(req, res) {
   }
 
   const ip = clientIp(req);
-  if (rateLimitHit(ip)) {
-    console.warn('[rsvp] rate_limited ip=%s', redact(ip));
-    return res.status(429).json({ ok: false, error: 'rate_limited', code: 'rate' });
+  try {
+    const rate = await consumeRateLimit(ip);
+    if (!rate.allowed) {
+      console.warn('[rsvp] rate_limited bucket=%s', redact(rateBucket(ip)));
+      if (rate.reset_at) res.setHeader('Retry-After', String(RATE_WINDOW_SECONDS));
+      return res.status(429).json({ ok: false, error: 'rate_limited', code: 'rate' });
+    }
+  } catch (err) {
+    console.error('[rsvp] rate_limit_unavailable %s', err && err.message ? err.message : String(err));
+    return res.status(503).json({ ok: false, error: 'rate_limit_unavailable', code: 'rate_backend' });
   }
 
   const v = validate(body);
@@ -181,28 +232,23 @@ module.exports = async function handler(req, res) {
 
   let rpcJson;
   try {
-    const r = await fetch(`${SUPABASE_RPC}create_rsvp`, {
-      method: 'POST',
-      headers: rpcHeaders(),
-      body: JSON.stringify({
-        p_event_id:              EVENT_ID,
-        p_guardian_name:         vals.guardian_name,
-        p_email:                 vals.email,
-        p_phone:                 vals.phone,
-        p_children_count:        vals.children_count,
-        p_age_range:             vals.age_range,
-        p_requested_service:     vals.requested_service,
-        p_arrival_window:        vals.arrival_window,
-        p_preferred_language:    vals.preferred_language,
-        p_accessibility_contact: vals.accessibility_contact,
-        p_contact_privately:     vals.contact_privately,
-      }),
+    const { response, text, json } = await callRpc('create_rsvp', {
+      p_event_id: EVENT_ID,
+      p_guardian_name: vals.guardian_name,
+      p_email: vals.email,
+      p_phone: vals.phone,
+      p_children_count: vals.children_count,
+      p_age_range: vals.age_range,
+      p_requested_service: vals.requested_service,
+      p_arrival_window: vals.arrival_window,
+      p_preferred_language: vals.preferred_language,
+      p_accessibility_contact: vals.accessibility_contact,
+      p_contact_privately: vals.contact_privately,
     });
-    const text = await r.text();
-    try { rpcJson = JSON.parse(text); } catch { rpcJson = null; }
-    if (!r.ok || !rpcJson || rpcJson.ok !== true) {
+    rpcJson = json;
+    if (!response.ok || !rpcJson || rpcJson.ok !== true) {
       console.error('[rsvp] rpc_failed status=%s email=%s phone=%s body=%s',
-        r.status, redact(vals.email || ''), redact(vals.phone || ''), (text || '').slice(0, 200));
+        response.status, redact(vals.email || ''), redact(vals.phone || ''), (text || '').slice(0, 200));
       return res.status(500).json({ ok: false, error: 'rpc_failed', code: 'rpc' });
     }
   } catch (err) {
@@ -211,15 +257,15 @@ module.exports = async function handler(req, res) {
   }
 
   const confirmation_code = rpcJson.confirmation_code || null;
-  const registration_id   = rpcJson.registration_id   || null;
-  const cancel_token      = rpcJson.cancel_token      || null;
-  const is_duplicate      = rpcJson.is_duplicate === true;
+  const registration_id = rpcJson.registration_id || null;
+  const cancel_token = rpcJson.cancel_token || null;
+  const is_duplicate = rpcJson.is_duplicate === true;
 
   console.log('[rsvp] saved id=%s code=%s dup=%s email=%s phone=%s',
     registration_id, confirmation_code, is_duplicate,
     redact(vals.email || ''), redact(vals.phone || ''));
 
-  const base = process.env.RSVP_PUBLIC_BASE_URL || 'https://asc3nd-interactive-document.vercel.app';
+  const base = requiredEnv('RSVP_PUBLIC_BASE_URL');
   const verify_url = cancel_token ? `${base}/api/rsvp-verify?token=${encodeURIComponent(cancel_token)}` : null;
   const cancel_url = cancel_token ? `${base}/api/rsvp-cancel?token=${encodeURIComponent(cancel_token)}` : null;
 
