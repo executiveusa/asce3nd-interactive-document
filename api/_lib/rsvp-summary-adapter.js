@@ -46,7 +46,7 @@ function redactName(full) {
 }
 
 async function loadConfirmed(eventId = DEFAULT_EVENT_ID) {
-  const rows = await callRpc('load_confirmed_rsvp', { p_event_id: eventId });
+  const rows = await callRpc('load_confirmed_rsvp_v2', { p_event_id: eventId });
   const list = Array.isArray(rows) ? rows : (rows ? [rows] : []);
   return list.map(r => ({
     first_name:             redactName(r.guardian_name),
