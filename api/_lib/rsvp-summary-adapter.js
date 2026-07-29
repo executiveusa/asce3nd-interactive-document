@@ -2,25 +2,33 @@
 // The workbook's Chapter 2 imports this to render the RSVP Command Center.
 // NEVER writes. Returns ONLY redacted rows - no email, no phone, no surname.
 
-const FALLBACK_RPC  = 'https://api.thepaulieffect.com/supabase/rest/v1/rpc/';
-const FALLBACK_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzcyNzc2NjczLCJleHAiOjE5MzA0NTY2NzN9.rl1mc-GgpG6nQArbEfFAKOcMvzL7rrgzPFT-LlCiCy4';
+function requiredEnv(name) {
+  const value = process.env[name];
+  if (!value || !value.trim()) {
+    throw new Error(`missing_required_env:${name}`);
+  }
+  return value.trim();
+}
 
-const SUPABASE_RPC  = process.env.SUPABASE_RPC  || FALLBACK_RPC;
-const SUPABASE_ANON = process.env.SUPABASE_ANON || FALLBACK_ANON;
+function rpcBaseUrl() {
+  const raw = requiredEnv('SUPABASE_RPC');
+  return raw.endsWith('/') ? raw : `${raw}/`;
+}
 
 const DEFAULT_EVENT_ID = 'd0000000-0000-0000-0000-000000000002';
 
 function rpcHeaders() {
+  const anon = requiredEnv('SUPABASE_ANON');
   return {
     'Content-Type': 'application/json',
-    apikey: SUPABASE_ANON,
-    Authorization: `Bearer ${SUPABASE_ANON}`,
+    apikey: anon,
+    Authorization: `Bearer ${anon}`,
     'Content-Profile': 'work',
   };
 }
 
 async function callRpc(name, params) {
-  const r = await fetch(`${SUPABASE_RPC}${name}`, {
+  const r = await fetch(`${rpcBaseUrl()}${name}`, {
     method: 'POST',
     headers: rpcHeaders(),
     body: JSON.stringify(params || {}),
@@ -41,17 +49,19 @@ async function loadConfirmed(eventId = DEFAULT_EVENT_ID) {
   const rows = await callRpc('load_confirmed_rsvp', { p_event_id: eventId });
   const list = Array.isArray(rows) ? rows : (rows ? [rows] : []);
   return list.map(r => ({
-    first_name:            redactName(r.guardian_name),
-    children_count:        r.children_count ?? 0,
-    age_range:             r.age_range ?? null,
-    requested_service:     r.requested_service ?? null,
-    arrival_window:        r.arrival_window ?? null,
-    preferred_language:    r.preferred_language ?? 'en',
-    accessibility_contact: !!r.accessibility_contact,
-    status:                r.status ?? null,
-    checked_in_at:         r.checked_in_at ?? null,
-    haircut_completed_at:  r.haircut_completed_at ?? null,
-    created_at:            r.created_at ?? null,
+    first_name:             redactName(r.guardian_name),
+    children_count:         r.children_count ?? 0,
+    age_range:              r.age_range ?? null,
+    requested_service:      r.requested_service ?? null,
+    arrival_window:         r.arrival_window ?? null,
+    preferred_language:     r.preferred_language ?? 'en',
+    accessibility_contact:  !!r.accessibility_contact,
+    status:                 r.status ?? null,
+    source:                 r.source ?? 'unknown',
+    checked_in_at:          r.checked_in_at ?? null,
+    haircut_completed_at:   r.haircut_completed_at ?? null,
+    created_at:             r.created_at ?? null,
+    updated_at:             r.updated_at ?? null,
   }));
 }
 
