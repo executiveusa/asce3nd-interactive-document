@@ -1,0 +1,43 @@
+name: Apply Month 1 workbook chapter
+
+on:
+  push:
+    branches:
+      - feat/month-one-instagram-chapter
+    paths:
+      - tools/apply_month1_chapter.py
+      - .github/workflows/apply-month1-chapter.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-workbook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/month-one-instagram-chapter
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply deterministic workbook patch
+        run: python tools/apply_month1_chapter.py
+      - name: Validate expected chapter wiring
+        run: |
+          grep -q 'month1_rhythm' index.html
+          grep -q 'function rMonth1Calendar' index.html
+          grep -q 'function rMonth1Reels' index.html
+          grep -q "else if(id==='month1_handoff')h=rMonth1Handoff" index.html
+      - name: Commit generated workbook update
+        run: |
+          if git diff --quiet -- index.html; then
+            echo 'No workbook diff to commit.'
+            exit 0
+          fi
+          git config user.name 'ASC3ND Workbook Builder'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html
+          git commit -m 'feat: add native Month 1 Instagram workbook chapter'
+          git push origin HEAD:feat/month-one-instagram-chapter
