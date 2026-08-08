@@ -20,18 +20,27 @@
     const response=await fetch('./workbook-core.html',{cache:'no-store'});
     if(!response.ok)throw new Error('Workbook core returned '+response.status+'.');
     let source=await response.text();
+
     const stepOld='var STEPS=["welcome","followup","ch1","strategy","basics","mission","audience","voice","story","pillars","platforms","roadmap","rhythm","engagement","measurement","risk","summary","ch2_hero","ch2_cover","ch2_truth","ch2_responsibilities","ch2_runshow","ch2_operations","ch2_founder_prep","ch2_interview","ch2_readiness","ch2_eventday","ch2_results","ch2_buildon"];';
     const stepNew='var STEPS=["welcome","followup","ch1","strategy","basics","mission","audience","voice","story","pillars","platforms","roadmap","rhythm","engagement","measurement","risk","summary","ch2_hero","ch2_cover","ch2_truth","ch2_responsibilities","ch2_runshow","ch2_operations","ch2_founder_prep","ch2_interview","ch2_readiness","ch2_eventday","ch2_results","ch2_buildon","ch3_entry"];';
     if(!source.includes(stepOld))throw new Error('Chapter step anchor was not found.');
     source=source.replace(stepOld,stepNew);
+
     const titleOld="'ch2_buildon':'Stage 5 — Build On It'};";
     const titleNew="'ch2_buildon':'Stage 5 — Build On It','ch3_entry':'Chapter 3 — Month 1 Social System'};";
     if(!source.includes(titleOld))throw new Error('Chapter title anchor was not found.');
     source=source.replace(titleOld,titleNew);
+
+    const chapterLabelOld="  if(['ch2_hero','ch2_cover','ch2_truth','ch2_responsibilities','ch2_runshow','ch2_operations','ch2_founder_prep','ch2_interview','ch2_readiness','ch2_eventday','ch2_results','ch2_buildon'].indexOf(id)>-1) {\n    return t('Chapter 2 - The Event');\n  }\n  return '';";
+    const chapterLabelNew="  if(['ch2_hero','ch2_cover','ch2_truth','ch2_responsibilities','ch2_runshow','ch2_operations','ch2_founder_prep','ch2_interview','ch2_readiness','ch2_eventday','ch2_results','ch2_buildon'].indexOf(id)>-1) {\n    return t('Chapter 2 - The Event');\n  }\n  if(id==='ch3_entry') return t('Chapter 3 - Month 1 Social System');\n  return '';";
+    if(!source.includes(chapterLabelOld))throw new Error('Chapter label anchor was not found.');
+    source=source.replace(chapterLabelOld,chapterLabelNew);
+
     const renderOld="  else if(id==='ch2_buildon')h=rCh2Buildon();";
     const renderNew="  else if(id==='ch2_buildon')h=rCh2Buildon();\n  else if(id==='ch3_entry')h=rCh3Entry();";
     if(!source.includes(renderOld))throw new Error('Chapter renderer anchor was not found.');
     source=source.replace(renderOld,renderNew);
+
     const navigationAnchor='/* ══ NAVIGATION ══════════════════════════════════════════════════════ */';
     if(!source.includes(navigationAnchor))throw new Error('Navigation anchor was not found.');
     const chapterEntry=`
@@ -43,16 +52,44 @@ function rCh3Entry(){
       '<h3 style="font:800 clamp(48px,9vw,78px)/.88 Barlow Condensed,sans-serif;letter-spacing:-.035em;margin:0 0 20px;max-width:700px">'+t('Month 1 Social System')+'</h3>'+
       '<div style="width:72px;height:3px;background:var(--gold);margin:0 0 22px"></div>'+
       '<p style="max-width:620px;color:rgba(255,255,255,.72);font-size:15px;line-height:1.65;margin:0 0 28px">'+t('Turn the strategy into a repeatable publishing system: weekly rhythm, visual rhythm, the first-month calendar, Wednesday Reels, and the handoff rules ASC3ND can keep using.')+'</p>'+
-      '<div><a class="cta-btn" href="./chapter-3.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none">'+t('Open Chapter 3')+' '+icon('arrow-right','sm')+'</a></div>'+
+      '<div><a class="cta-btn" href="./chapter-3-shell.html?lang='+lang+'" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none">'+t('Open Chapter 3')+' '+icon('arrow-right','sm')+'</a></div>'+
     '</section>';
 }
 
 `;
     source=source.replace(navigationAnchor,chapterEntry+navigationAnchor);
+
+    const journeyOld=`        '<button class="jc-btn" id="btn-ch2">'+t('Continue')+' →</button>'+
+      '</div>'+
+    '</div>'+`;
+    const journeyNew=`        '<button class="jc-btn" id="btn-ch2">'+t('Continue')+' →</button>'+
+      '</div>'+
+      '<div class="journey-card">'+
+        '<div>'+ 
+          '<div class="jc-status" style="color:var(--gold)">'+t('NEXT')+'</div>'+ 
+          '<h3>'+t('Chapter 3')+'</h3>'+ 
+          '<p>'+t('Month 1 Social System. Turn the strategy into a repeatable weekly publishing and handoff system.')+'</p>'+ 
+        '</div>'+ 
+        '<a class="jc-btn" href="./chapter-3-shell.html?lang='+lang+'" style="text-decoration:none">'+t('Open Chapter')+' →</a>'+ 
+      '</div>'+ 
+    '</div>'+`;
+    if(!source.includes(journeyOld))throw new Error('Journey map anchor was not found.');
+    source=source.replace(journeyOld,journeyNew);
+
+    const progressOld=`  var stairs=STEPS.map(function(s,i){var cls=i<stepIndex?'done':(i===stepIndex?'current':'');return'<div class="'+cls+'" style="height:'+(7+i*1.5)+'px;"></div>';}).join('');`;
+    const progressNew=`  var stairs=STEPS.map(function(s,i){var cls=i<stepIndex?'done':(i===stepIndex?'current':'');var h=7+Math.min(i,8)*1.25;return'<div class="'+cls+'" style="height:'+h+'px;"></div>';}).join('');`;
+    if(!source.includes(progressOld))throw new Error('Progress stair anchor was not found.');
+    source=source.replace(progressOld,progressNew);
+    source=source.replace('.stair-row{display:flex;align-items:flex-end;gap:3px;height:20px;margin-bottom:0;}','.stair-row{display:flex;align-items:flex-end;gap:3px;height:20px;margin-bottom:0;overflow:hidden;}');
+
+    source=source.replace("var lang = 'en';","var lang = localStorage.getItem('asc3nd-lang')==='es'?'es':'en';");
+    source=source.split("lang=lang==='en'?'es':'en';renderStep();").join("lang=lang==='en'?'es':'en';localStorage.setItem('asc3nd-lang',lang);renderStep();");
+
     const navText="(isLast?t('Submit'):t('Next'))";
     if(source.includes(navText))source=source.replace(navText,"(stepId()==='ch3_entry'?t('Open Chapter 3'):(isLast?t('Submit'):t('Next')))");
     const navClick="if(nb)nb.addEventListener('click',function(){if(stepIndex<STEPS.length-1){playPageTurn();stepIndex++;renderStep();}else saveToCloud(true);});";
-    if(source.includes(navClick))source=source.replace(navClick,"if(nb)nb.addEventListener('click',function(){if(stepId()==='ch3_entry'){location.href='./chapter-3.html';return;}if(stepIndex<STEPS.length-1){playPageTurn();stepIndex++;renderStep();}else saveToCloud(true);});");
+    if(source.includes(navClick))source=source.replace(navClick,"if(nb)nb.addEventListener('click',function(){if(stepId()==='ch3_entry'){localStorage.setItem('asc3nd-lang',lang);location.href='./chapter-3-shell.html?lang='+lang;return;}if(stepIndex<STEPS.length-1){playPageTurn();stepIndex++;renderStep();}else saveToCloud(true);});");
+
     document.open();document.write(source);document.close();
   }catch(error){console.error('[ASC3ND workbook]',error);fail(error.message||'Unknown loading error.');}
 })();
