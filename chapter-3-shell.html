@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ASC3ND — Chapter 3</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff}iframe{width:100%;height:100%;border:0;display:block}
+</style>
+</head>
+<body>
+<iframe id="chapter" src="./chapter-3.html" title="ASC3ND Chapter 3 — Month 1 Social System"></iframe>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search);
+  var requested=params.get('lang');
+  var lang=requested==='es'?'es':(localStorage.getItem('asc3nd-lang')==='es'?'es':'en');
+  localStorage.setItem('asc3nd-lang',lang);
+  var frame=document.getElementById('chapter');
+  var initialized=false;
+  frame.addEventListener('load',function(){
+    try{
+      var doc=frame.contentDocument;
+      if(!doc)return;
+      if(!initialized){
+        initialized=true;
+        var btn=doc.getElementById('langBtn');
+        if(lang==='es'&&btn&&btn.textContent.trim()==='ES')btn.click();
+      }
+      var back=doc.getElementById('backBook');
+      if(back)back.onclick=function(ev){ev.preventDefault();top.location.href='./index.html';};
+      var langBtn=doc.getElementById('langBtn');
+      if(langBtn)langBtn.addEventListener('click',function(){setTimeout(function(){
+        var current=langBtn.textContent.trim()==='EN'?'es':'en';
+        localStorage.setItem('asc3nd-lang',current);
+      },0);});
+      var next=doc.getElementById('next');
+      if(next)next.addEventListener('click',function(){
+        var pages=doc.querySelectorAll('.page-section');
+        var visible=[].slice.call(pages).findIndex(function(p){return !p.classList.contains('hidden');});
+        if(visible===pages.length-1)setTimeout(function(){top.location.href='./index.html';},0);
+      });
+    }catch(error){console.error('[ASC3ND Chapter 3 shell]',error);}
+  });
+})();
+</script>
+</body>
+</html>
