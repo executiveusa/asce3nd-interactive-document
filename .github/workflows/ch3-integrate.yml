@@ -57,3 +57,4 @@ function rCh3Entry(){
           git add index.html .github/workflows/ch3-integrate.yml
           git commit -m "feat: wire Chapter 3 into workbook navigation"
           git push origin HEAD:feat/chapter-3-workbook-integration
+# one-time trigger
