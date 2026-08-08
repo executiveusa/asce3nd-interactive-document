@@ -1,8 +1,8 @@
-name: Integrate Chapter 3
+name: Finish Chapter 3 Integration
 on:
   push:
     branches:
-      - feat/chapter-3-workbook-integration
+      - main
 jobs:
   patch:
     if: github.actor != 'github-actions[bot]'
@@ -12,9 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/chapter-3-workbook-integration
-      - name: Patch workbook navigation
+          ref: main
+          fetch-depth: 0
+      - name: Build final Chapter 3 integration branch
         run: |
+          git checkout -b feat/ch3-final-integration
           python - <<'PY'
           from pathlib import Path
           p=Path('index.html')
@@ -25,11 +27,11 @@ jobs:
           s=s.replace(old,new,1)
           old="'ch2_buildon':'Stage 5 — Build On It'};"
           new="'ch2_buildon':'Stage 5 — Build On It','ch3_entry':'Chapter 3 — Month 1 Social System'};"
-          assert old in s, 'title-map anchor missing'
+          assert old in s, 'title map anchor missing'
           s=s.replace(old,new,1)
           old="  if(['ch2_hero','ch2_cover','ch2_truth','ch2_responsibilities','ch2_runshow','ch2_operations','ch2_founder_prep','ch2_interview','ch2_readiness','ch2_eventday','ch2_results','ch2_buildon'].indexOf(id)>-1) {\n    return t('Chapter 2 - The Event');\n  }\n  return '';"
           new="  if(['ch2_hero','ch2_cover','ch2_truth','ch2_responsibilities','ch2_runshow','ch2_operations','ch2_founder_prep','ch2_interview','ch2_readiness','ch2_eventday','ch2_results','ch2_buildon'].indexOf(id)>-1) {\n    return t('Chapter 2 - The Event');\n  }\n  if(id==='ch3_entry') return t('Chapter 3 - Month 1 Social System');\n  return '';"
-          assert old in s, 'chapter-label anchor missing'
+          assert old in s, 'chapter label anchor missing'
           s=s.replace(old,new,1)
           entry="""
 function rCh3Entry(){
@@ -37,7 +39,7 @@ function rCh3Entry(){
     '<div style="font:800 12px \'Barlow Condensed\',sans-serif;letter-spacing:.18em;color:var(--gold);margin-bottom:10px">'+t('CHAPTER 03')+'</div>'+
     '<h3 style="font:800 clamp(44px,8vw,72px)/.9 \'Barlow Condensed\',sans-serif;letter-spacing:-.03em;margin:0 0 18px">'+t('Month 1 Social System')+'</h3>'+
     '<p style="max-width:620px;color:rgba(255,255,255,.72);font-size:15px;line-height:1.6;margin:0 0 24px">'+t('Turn the strategy into a repeatable publishing system: weekly rhythm, visual rhythm, the first-month calendar, Wednesday Reels, and the handoff rules ASC3ND can keep using.')+'</p>'+
-    '<div><a class="cta-btn" href="./chapter-3.html" style="display:inline-block;text-decoration:none">'+t('Open Chapter 3')+' '+icon('arrow-right','sm')+'</a></div>'+
+    '<div><a class="cta-btn" href="./chapter-3.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none">'+t('Open Chapter 3')+' '+icon('arrow-right','sm')+'</a></div>'+
   '</div>';
 }
 
@@ -55,5 +57,5 @@ function rCh3Entry(){
           git config user.name "ASC3ND Workbook Builder"
           git config user.email "actions@users.noreply.github.com"
           git add index.html .github/workflows/ch3-integrate.yml
-          git commit -m "feat: wire Chapter 3 into workbook navigation"
-          git push origin HEAD:feat/chapter-3-workbook-integration
+          git commit -m "feat: complete Chapter 3 workbook integration"
+          git push origin feat/ch3-final-integration
