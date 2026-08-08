@@ -1,22 +1,21 @@
 name: Finish Chapter 3 Integration
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [main]
+    types: [opened]
 jobs:
   patch:
-    if: github.actor != 'github-actions[bot]'
+    if: startsWith(github.head_ref, 'feat/ch3-final-integration')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
-      - name: Build final Chapter 3 integration branch
+      - name: Patch workbook and remove one-time helper
         run: |
-          git checkout -b feat/ch3-final-integration
           python - <<'PY'
           from pathlib import Path
           p=Path('index.html')
@@ -53,9 +52,9 @@ function rCh3Entry(){
           s=s.replace(old,new,1)
           p.write_text(s)
           PY
-          rm .github/workflows/ch3-integrate.yml
+          rm -f .github/workflows/ch3-integrate.yml .ch3-trigger .ch3-pr-trigger
           git config user.name "ASC3ND Workbook Builder"
           git config user.email "actions@users.noreply.github.com"
-          git add index.html .github/workflows/ch3-integrate.yml
+          git add -A
           git commit -m "feat: complete Chapter 3 workbook integration"
-          git push origin feat/ch3-final-integration
+          git push origin HEAD:${{ github.head_ref }}
