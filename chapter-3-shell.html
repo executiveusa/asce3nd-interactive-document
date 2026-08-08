@@ -22,6 +22,14 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff}iframe
     try{
       var doc=frame.contentDocument;
       if(!doc)return;
+
+      var coverCopy=doc.querySelector('.chapter-cover p[data-en]');
+      if(coverCopy){
+        coverCopy.setAttribute('data-en','This chapter helps us create rhythm, trust and consistency. What to publish, when to publish it, how the grid should feel, and how to keep your system going after handoff.');
+        coverCopy.setAttribute('data-es','Este capítulo nos ayuda a crear ritmo, confianza y consistencia. Qué publicar, cuándo publicarlo, cómo debe sentirse la cuadrícula y cómo mantener su sistema en marcha después de la entrega.');
+        coverCopy.textContent=lang==='es'?coverCopy.getAttribute('data-es'):coverCopy.getAttribute('data-en');
+      }
+
       if(!initialized){
         initialized=true;
         var btn=doc.getElementById('langBtn');
